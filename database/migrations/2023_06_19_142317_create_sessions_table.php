@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('duration');
             $table->unsignedBigInteger('group');
             
-            $table->foreign('group')->references('id')->on('groups');
+            $table->foreign('group')->references('id')->on('groupps');
             $table->timestamps();
         });
     }

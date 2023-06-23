@@ -2,24 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddUserRequest;
+use App\Http\Requests\SignInRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function addUser(Request $request)
+    public function addUser(AddUserRequest $request)
     {
-        $fields = $request->validate([
-            'full_name' => 'required|string|max:50',
-            'email' => 'required|string|unique:users,email|max:100',
-            'password' => 'required|string|max:50',
-            'phone_number' => 'required|string|unique:users,phone_number|min:10|max:15',
-            'city' => 'required|string|max:50',
-            'gender' => 'required|integer',
-            'role' => 'required|integer',
-            'image' => 'nullable|image'
-        ]);
+        $fields = $request->validated();
 
         $user = new User();
         $user->full_name = $fields['full_name'];
@@ -34,31 +27,28 @@ class UserController extends Controller
         return response(['message'=>'user inserted successfully'],201);
     }
 
-    public function signIn(Request $request)
+    public function signIn(SignInRequest $request)
     {
-        $fields = $request->validate([
-            'email' => 'required|string|max:100',
-            'password' => 'required|string|max:50',
-        ]);
+        $validated = $request->validated();
 
         // check email
-        $user = User::where('email',$fields['email'])->first();
+        // $user = User::where('email',$fields['email'])->first();
 
-        if($user == null){
-            return response([
-                'message' => 'the email is uncorrect'
-            ]);
-        }
-        if(!Hash::check($fields['password'],$user->password)) {
-            return response([
-                'message' => 'the password is uncorrect'
-            ]);
-        }
-        $token = $user->createToken('myapptoken')->plainTextToken;
+        // if($user == null){
+        //     return response([
+        //         'message' => 'the email is uncorrect'
+        //     ]);
+        // }
+        // if(!Hash::check($fields['password'],$user->password)) {
+        //     return response([
+        //         'message' => 'the password is uncorrect'
+        //     ]);
+        // }
+        // $token = $user->createToken('myapptoken')->plainTextToken;
 
-        return response([
-            'user' => $user,
-            'token' => $token
-        ]);
+        // return response([
+        //     'user' => $user,
+        //     'token' => $token
+        // ]);
     }
 }

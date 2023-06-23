@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->unsignedInteger('tasks');
             $table->unsignedBigInteger('module');
 
             $table->foreign('module')->references('id')->on('modules');

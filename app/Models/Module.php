@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Course extends Model
+class Module extends Model
 {
     use HasFactory;
 
-    protected $table = 'courses';
+    protected $table = 'modules';
 
     protected $fillable = [
         'name',
         'description',
-        'image',
-        'category',
-        'price'
+        'duration',
+        'course'
     ];
 }
-
-// digital marketing , this is the course of digital marketing, null, 

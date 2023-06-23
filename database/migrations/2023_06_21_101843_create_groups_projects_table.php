@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('group');
             
             $table->foreign('project')->references('id')->on('projects');
-            $table->foreign('group')->references('id')->on('groups');
+            $table->foreign('group')->references('id')->on('groupps');
             $table->timestamps();
         });
     }
