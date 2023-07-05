@@ -27,6 +27,8 @@ Route::post('/add_user',[UserController::class,'addUser']);
 Route::post('/sign_in',[UserController::class,'signIn']);
 
 Route::post('/add_course',[CourseController::class,'addCourse']);
+Route::get('/get_courses',[CourseController::class,'getCourses']);
+Route::get('/get_course_details/{id}',[CourseController::class,'getCourseDetails']);
 
 Route::post('/general_test', [TestController::class,'tester']);
 

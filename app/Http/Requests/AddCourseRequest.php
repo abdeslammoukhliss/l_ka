@@ -36,6 +36,7 @@ class AddCourseRequest extends FormRequest
                 'modules.*.name' => 'required|string',
                 'modules.*.description' => 'required|string',
                 'modules.*.duration' => 'required|integer',
+                'modules.*.teacher' => 'required|integer|exists:users,id',
                 'modules.*.projects' => 'required|present',
                     'modules.*.projects.*.name' => 'required|string',
                     'modules.*.projects.*.description' => 'required|string',

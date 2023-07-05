@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('sessions', function (Blueprint $table) {
+        Schema::create('teachers_modules', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->unsignedInteger('duration');
-            $table->unsignedBigInteger('group');
-            
-            $table->foreign('group')->references('id')->on('groups');
+            $table->unsignedBigInteger('teacher');
+            $table->unsignedBigInteger('module');
+
+            $table->foreign('teacher')->references('id')->on('users');
+            $table->foreign('module')->references('id')->on('modules');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sessions');
+        Schema::dropIfExists('teachers_modules');
     }
 };

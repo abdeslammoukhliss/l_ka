@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('registration_date');
 
             $table->foreign('student')->references('id')->on('users');
-            $table->foreign('group')->references('id')->on('groupps');
+            $table->foreign('group')->references('id')->on('groups');
             $table->timestamps();
         });
     }

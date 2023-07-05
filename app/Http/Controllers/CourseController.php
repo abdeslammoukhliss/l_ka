@@ -8,7 +8,10 @@ use App\Models\Course;
 use App\Models\Group;
 use App\Models\Module;
 use App\Models\Project;
+use App\Models\TeacherModule;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
@@ -48,6 +51,11 @@ class CourseController extends Controller
             $module->course = $course->id;
             $module->save();
 
+            $teacher = new TeacherModule();
+            $teacher->teacher = $m['teacher'];
+            $teacher->module = $module->id;
+            $teacher->save();
+
             $projects = $m['projects'];
             foreach($projects as $p)
             {
@@ -69,8 +77,50 @@ class CourseController extends Controller
             }
         }
         
-
-        
         return response(["message"=>"congrat baby"],201);
+    }
+
+    public function getCourses()
+    {
+        return Course::select('id','name')->get();
+    }
+
+    public function getCourseDetails($id)
+    {
+        $course = Course::where('id',$id)->first();
+        // if the requested course doesn't exist 
+        if($course == null)
+        {
+            return response(['message'=>'this course does not exist'],422);
+        }
+        // get the modules of the current course
+        $modules = Module::where('course',$id)->get();
+        foreach($modules as $module)
+        {
+            $m = new Module();
+            $m->id = $module->id;
+            $m->name = $module->name;
+            $m->description = $module->description;
+            $m->duration = $module->duration;
+            $m->teacher = DB::select('select users.full_name from teachers_modules join users on teachers_modules.teacher = users.id where teachers_modules.module = ?;',[$module->id])[0]->full_name;
+            $projects = Project::where('module',$module->id)->get();
+            $m->projects = $projects;
+
+            $chapters = Chapter::where('module',$module->id)->get();
+            $m->chapters = $chapters;
+        }
+        $course->modules = $m;
+
+        $groups = Group::where('course',$id)->get();
+        foreach($groups as $group)
+        {
+            $group->students_count = DB::select('select count(*) as count from students_groups where `group` = ?',[$group->id])[0]->count;
+        }
+        $course->groups = $groups;
+
+        $teachers = DB::select('select users.id,users.full_name, users.image,count(*) as modules_count from users join teachers_modules on users.id = teachers_modules.teacher join modules on teachers_modules.module = modules.id where modules.course = ? group by users.id, users.full_name, users.image',[$id]);
+
+        $course->teachers = $teachers;
+        return response($course);
     }
 }
