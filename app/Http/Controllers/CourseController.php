@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AddCourseRequest;
+use App\Http\Requests\EnrollRequest;
 use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Group;
 use App\Models\Module;
 use App\Models\Project;
+use App\Models\StudentGroup;
 use App\Models\TeacherModule;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -31,6 +33,13 @@ class CourseController extends Controller
             $request->image->move(public_path('images/courses'),$image_name);
         }
         $course->save();
+
+        // default group
+        $group = new Group();
+        $group->name = 'default';
+        $group->course = $course->id;
+        $group->save();
+        ////////////////
 
         $groups = $fields['groups'];
         foreach($groups as $g)
@@ -82,7 +91,18 @@ class CourseController extends Controller
 
     public function getCourses()
     {
-        return Course::select('id','name')->get();
+        $result = [];
+        $courses = Course::all();
+        foreach($courses as $course)
+        {
+            array_push($result,[
+                'id' => $course->id,
+                'name' => $course->name,
+                'price' => $course->price,
+                'image' => $course->image
+            ]);
+        }
+        return response($result,200);
     }
 
     public function getCourseDetails($id)
@@ -122,5 +142,25 @@ class CourseController extends Controller
 
         $course->teachers = $teachers;
         return response($course);
+    }
+
+    public function enroll(EnrollRequest $request)
+    {
+        $fields = $request->validated();
+
+        $student = User::where('role',3)->where('id',$fields['student_id'])->first();
+        if($student == null)
+        {
+            return response(['message'=> 'only the students are allowed to enroll the courses'],422);
+        }
+        $group = Group::where('course',$fields['course_id'])->where('name','default')->first();
+
+        $student_group = new StudentGroup();
+        $student_group->student = $fields['student_id'];
+        $student_group->group = $group->id;
+        $student_group->registration_date = now();
+        $student_group->save();
+
+        return response(['message'=>'you have enrolled successfully']);
     }
 }

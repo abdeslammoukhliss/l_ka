@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SignInRequest extends FormRequest
+class EnrollRequest extends FormRequest
 {
     protected $stopOnFirstFailure = true;
     /**
@@ -16,7 +16,7 @@ class SignInRequest extends FormRequest
     {
         return true;
     }
-    
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,8 +25,8 @@ class SignInRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|string|max:100',
-            'password' => 'required|string|max:50',
+            'course_id' => 'required|integer|exists:courses,id',
+            'student_id' => 'required|integer|exists:users,id',
         ];
     }
 }
