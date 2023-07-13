@@ -9,6 +9,6 @@
 <body>
     <h1>Reset password</h1>
         Please reset your password by clicking on the link bellow: 
-    <a href="{{ route('reset_form', [$token]) }}">Reset Password</a>
+    <a href="{{ route('new_password_form', [$token]) }}">Reset Password</a>
 </body>
 </html>

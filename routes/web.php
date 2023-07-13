@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -31,13 +32,13 @@ Route::get('/first', function () {
 // })->middleware('signed')->name('verification.verify');
 
 // verify link
-Route::get('/verify_email/{id}/{token}', [UserController::class,'verifyEmail'])->name('user.verify');
+Route::get('/verify_email/{id}/{token}', [AuthController::class,'verifyEmail'])->name('user.verify');
 
-Route::get('/reset_form/{token}',function(String $token){
+Route::get('/new_password_form/{token}',function(String $token){
     return view('new_password_form')->with(['message'=>'','token'=>$token]);
-})->name('reset_form');
+})->name('new_password_form');
 
-Route::post('/new_password',[UserController::class,'newPassword'])->name('new_password');
+Route::post('/new_password',[AuthController::class,'newPassword'])->name('new_password');
 
 // Route::get('/reset_password', function () {
 //     return view('reset_password')->with(['message'=>'','token'=>'fje']);

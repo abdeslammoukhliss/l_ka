@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\TestController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,8 +23,8 @@ Route::get('/users', function (Request $request) {
     return DB::select('select * from users');
 })->middleware('verified');
 
-Route::post('/add_user',[UserController::class,'addUser']);
-Route::post('/sign_in',[UserController::class,'signIn']);
+Route::post('/add_user',[AuthController::class,'addUser']);
+Route::post('/sign_in',[AuthController::class,'signIn']);
 
 Route::post('/add_course',[CourseController::class,'addCourse']);
 Route::get('/get_courses',[CourseController::class,'getCourses']);
@@ -33,7 +33,7 @@ Route::post('/enroll',[CourseController::class,'enroll']);
 
 Route::post('/general_test', [TestController::class,'tester']);
 
-Route::post('/send_reset_password_link', [UserController::class,'sendResetPasswordLink']);
+Route::post('/forgot_password', [AuthController::class,'sendResetPasswordLink']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
