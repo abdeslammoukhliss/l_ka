@@ -23,7 +23,9 @@ class UserSeeder extends Seeder
             'phone_number' => '0666666666',
             'gender' => 1,
             'city' => 'agadir',
-            'role' => 1
+            'role' => 1,
+            'email_verified_at' => now(),
+            'registration_token' => Str::random(64)
         ]);
 
         DB::table('users')->insert([
@@ -33,7 +35,9 @@ class UserSeeder extends Seeder
             'phone_number' => '0777777777',
             'gender' => 1,
             'city' => 'tarodant',
-            'role' => 2
+            'role' => 2,
+            'email_verified_at' => now(),
+            'registration_token' => Str::random(64)
         ]);
         DB::table('users')->insert([
             'full_name' => 'salma alaoui',
@@ -42,7 +46,9 @@ class UserSeeder extends Seeder
             'phone_number' => '0888888888',
             'gender' => 2,
             'city' => 'rabat',
-            'role' => 2
+            'role' => 2,
+            'email_verified_at' => now(),
+            'registration_token' => Str::random(64)
         ]);
     }
 }

@@ -149,7 +149,7 @@ class CourseController extends Controller
                 $projects = Project::where('module',$module->id)->get();
                 foreach($projects as $project)
                 {
-                    
+                    $projects_counts++;
                 }
 
             }
@@ -159,7 +159,7 @@ class CourseController extends Controller
                 'price' => $course->price,
                 'image' => $course->image,
                 'modules' => $modules_count,
-                'projects' => $duration
+                'projects' => $projects_counts
             ]);
         }
         // modules number
