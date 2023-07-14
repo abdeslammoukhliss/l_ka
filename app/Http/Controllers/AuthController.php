@@ -29,10 +29,10 @@ class AuthController extends Controller
         $user->role = $fields['role'];
         $user->save();
 
-        Mail::send('email_verification', ['id' => $user->id,'token' => $registration_token], function($message) use($request){
-            $message->to($request->email);
-            $message->subject('Email Verification Mail');
-        });
+        // Mail::send('email_verification', ['id' => $user->id,'token' => $registration_token], function($message) use($request){
+        //     $message->to($request->email);
+        //     $message->subject('Email Verification Mail');
+        // });
 
         return response(['message'=>'user inserted successfully'],201);
     }
