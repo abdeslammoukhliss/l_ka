@@ -29,10 +29,10 @@ class AuthController extends Controller
         $user->role = $fields['role'];
         $user->save();
 
-        // Mail::send('email_verification', ['id' => $user->id,'token' => $registration_token], function($message) use($request){
-        //     $message->to($request->email);
-        //     $message->subject('Email Verification Mail');
-        // });
+        Mail::send('email_verification', ['id' => $user->id,'token' => $registration_token], function($message) use($request){
+            $message->to($request->email);
+            $message->subject('Email Verification Mail');
+        });
 
         return response(['message'=>'user inserted successfully'],201);
     }
@@ -47,12 +47,17 @@ class AuthController extends Controller
         if($user == null){
             return response([
                 'message' => 'the email is uncorrect'
-            ]);
+            ],422);
+        }
+        if(!$user->hasVerifiedEmail()){
+            return response([
+                'message' => 'account verification is necessary'
+            ],422);
         }
         if(!Hash::check($fields['password'],$user->password)) {
             return response([
                 'message' => 'the password is uncorrect'
-            ]);
+            ],422);
         }
         // $token = $user->createToken('myapptoken')->plainTextToken;
 

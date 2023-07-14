@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
 {
-    public function addCourse(AddCourseRequest $request) 
+    public function addCourse(AddCourseRequest $request)
     {
         $fields = $request->validated();
 
@@ -95,13 +95,62 @@ class CourseController extends Controller
         $courses = Course::all();
         foreach($courses as $course)
         {
+            $modules = Module::where('course',$course->id)->get();
+            $count = 0;
+            $duration = 0;
+            foreach($modules as $module)
+            {
+                $count++;
+                $duration = $duration + $module->duration;
+            }
             array_push($result,[
                 'id' => $course->id,
                 'name' => $course->name,
                 'price' => $course->price,
-                'image' => $course->image
+                'image' => $course->image,
+                'modules' => $count,
+                'duration' => $duration
             ]);
         }
+        // modules number
+        // course duration
+        return response($result,200);
+    }
+
+    public function getTeacherCourses($teacher)
+    {
+        $result = [];
+        $courses = [];
+        $teachers_modules = DB::select('select m.name,m.course from teachers_modules tm join modules m on tm.module = m.id where tm.teacher = ?;',[$teacher]);
+        foreach($teachers_modules as $module)
+        {
+            $course = Course::where('id',$module->course)->first();
+            if(!in_array($course,$courses))
+            {
+                array_push($courses,$course);
+            }
+        }
+        foreach($courses as $course)
+        {
+            $modules = Module::where('course',$course->id)->get();
+            $count = 0;
+            $duration = 0;
+            foreach($modules as $module)
+            {
+                $count++;
+                $duration = $duration + $module->duration;
+            }
+            array_push($result,[
+                'id' => $course->id,
+                'name' => $course->name,
+                'price' => $course->price,
+                'image' => $course->image,
+                'modules' => $count,
+                'duration' => $duration
+            ]);
+        }
+        // modules number
+        // course duration
         return response($result,200);
     }
 
