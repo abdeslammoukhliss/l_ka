@@ -119,6 +119,14 @@ class CourseController extends Controller
 
     public function getTeacherCourses($teacher)
     {
+        $value = User::where('id',$teacher)->first();
+        if(is_null($value))
+        {
+            return response(['message'=>'this teacher does not exist']);
+        }else if($value->role != 2)
+        {
+            return response(['message'=>'this user is not a teacher']);
+        }
         $result = [];
         $courses = [];
         $teachers_modules = DB::select('select m.name,m.course from teachers_modules tm join modules m on tm.module = m.id where tm.teacher = ?;',[$teacher]);
@@ -133,20 +141,25 @@ class CourseController extends Controller
         foreach($courses as $course)
         {
             $modules = Module::where('course',$course->id)->get();
-            $count = 0;
-            $duration = 0;
+            $modules_count = 0;
+            $projects_counts = 0;
             foreach($modules as $module)
             {
-                $count++;
-                $duration = $duration + $module->duration;
+                $modules_count++;
+                $projects = Project::where('module',$module->id)->get();
+                foreach($projects as $project)
+                {
+                    
+                }
+
             }
             array_push($result,[
                 'id' => $course->id,
                 'name' => $course->name,
                 'price' => $course->price,
                 'image' => $course->image,
-                'modules' => $count,
-                'duration' => $duration
+                'modules' => $modules_count,
+                'projects' => $duration
             ]);
         }
         // modules number

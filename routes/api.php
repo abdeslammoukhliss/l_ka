@@ -31,7 +31,9 @@ Route::post('/forgot_password', [AuthController::class,'sendResetPasswordLink'])
 
 Route::post('/add_course',[CourseController::class,'addCourse']);
 Route::get('/get_courses',[CourseController::class,'getCourses']);
+Route::get('/get_teacher_courses/{teacher}',[CourseController::class,'getTeacherCourses']);
 Route::get('/get_course_details/{id}',[CourseController::class,'getCourseDetails']);
+// if the user want to register in a course
 Route::post('/enroll',[CourseController::class,'enroll']);
 
 Route::get('/get_categories',[CategoryController::class,'getCategories']);
