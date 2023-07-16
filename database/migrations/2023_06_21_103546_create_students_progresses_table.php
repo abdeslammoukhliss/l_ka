@@ -15,16 +15,21 @@ return new class extends Migration
     {
         Schema::create('students_progresses', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('status');
-            $table->integer('score');
-            $table->unsignedBigInteger('user');
+            $table->unsignedBigInteger('student');
             $table->unsignedBigInteger('group_project');
+            $table->double('score')->default(0);
+            $table->double('performance')->default(0);
+            $table->double('quality')->default(0);
+            $table->double('technology')->default(0);
+            $table->double('deadline')->default(0);
+            $table->double('efficiency')->default(0);
             
-            $table->foreign('user')->references('id')->on('users');
-            $table->foreign('group_project')->references('id')->on('sessions');
+            $table->foreign('student')->references('id')->on('users');
+            $table->foreign('group_project')->references('id')->on('groups_projects');
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.

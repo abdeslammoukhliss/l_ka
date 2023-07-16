@@ -167,6 +167,52 @@ class CourseController extends Controller
         return response($result,200);
     }
 
+    public function getStudentCourses($student)
+    {
+        $value = User::where('id',$student)->first();
+        if(is_null($value))
+        {
+            return response(['message'=>'this student does not exist']);
+        }else if($value->role != 3)
+        {
+            return response(['message'=>'this user is not a student']);
+        }
+        $result = [];
+        $courses = [];
+
+        $student_courses = DB::select("select g.course from users u join students_groups sg on u.id = sg.student join `groups` g on sg.`group` = g.id;");
+        foreach($student_courses as $course)
+        {
+            $course = Course::where('id',$course->course)->first();
+            if(!in_array($course,$courses))
+            {
+                array_push($courses,$course);
+            }
+        }
+        foreach($courses as $course)
+        {
+            $modules = Module::where('course',$course->id)->get();
+            $modules_count = 0;
+            $duration = 0;
+            foreach($modules as $module)
+            {
+                $modules_count++;
+                $duration = $duration + $module->duration;
+            }
+            array_push($result,[
+                'id' => $course->id,
+                'name' => $course->name,
+                // 'price' => $course->price,
+                // 'image' => $course->image,
+                'modules' => $modules_count,
+                'duration' => $duration
+            ]);
+        }
+        // modules number
+        // course duration
+        return response($result,200);
+    }
+
     public function getCourseDetails($id)
     {
         $course = Course::where('id',$id)->first();
