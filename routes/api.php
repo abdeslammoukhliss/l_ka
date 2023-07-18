@@ -37,6 +37,8 @@ Route::post('/forgot_password', [AuthController::class,'sendResetPasswordLink'])
 // get the statistics of admin dashboard
 Route::get('/get_statistics',[UserController::class,'getStatistics']);
 Route::post('/change_group',[UserController::class,'changeGroup']);
+Route::get('/get_teachers',[UserController::class,'getTeachers']);
+Route::get('/get_students',[UserController::class,'getStudents']);
 
 // course APIs //////////////////////////////////////////////////////
 Route::post('/add_course',[CourseController::class,'addCourse']);

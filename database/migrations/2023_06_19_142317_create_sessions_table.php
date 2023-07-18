@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('sessions', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
+            $table->timestamps('date_and_time');
             $table->unsignedInteger('duration');
             $table->unsignedBigInteger('group');
             
