@@ -44,6 +44,7 @@ Route::get('/get_courses',[CourseController::class,'getCourses']);
 Route::get('/get_teacher_courses/{teacher}',[CourseController::class,'getTeacherCourses']);
 Route::get('/get_student_courses/{student}',[CourseController::class,'getStudentCourses']);
 Route::get('/get_course_details/{id}',[CourseController::class,'getCourseDetails']);
+Route::get('/get_course_details_for_student/{id}/{student}',[CourseController::class,'getCourseDetailsForStudent']);
 // if the user want to register in a course
 Route::post('/enroll',[CourseController::class,'enroll']);
 

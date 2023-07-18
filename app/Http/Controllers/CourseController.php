@@ -221,6 +221,7 @@ class CourseController extends Controller
         {
             return response(['message'=>'this course does not exist'],422);
         }
+        $ms = [];
         // get the modules of the current course
         $modules = Module::where('course',$id)->get();
         foreach($modules as $module)
@@ -236,8 +237,9 @@ class CourseController extends Controller
 
             $chapters = Chapter::where('module',$module->id)->get();
             $m->chapters = $chapters;
+            array_push($ms,$m);
         }
-        $course->modules = $m;
+        $course->modules = $ms;
 
         $groups = Group::where('course',$id)->get();
         foreach($groups as $group)
@@ -247,6 +249,56 @@ class CourseController extends Controller
         $course->groups = $groups;
 
         $teachers = DB::select('select users.id,users.full_name, users.image,count(*) as modules_count from users join teachers_modules on users.id = teachers_modules.teacher join modules on teachers_modules.module = modules.id where modules.course = ? group by users.id, users.full_name, users.image',[$id]);
+
+        $course->teachers = $teachers;
+        return response($course);
+    }
+
+    public function getCourseDetailsForStudent($course_id,$student_id)
+    {
+        $course = Course::where('id',$course_id)->first();
+        // if the requested course doesn't exist
+        if($course == null)
+        {
+            return response(['message'=>'this course does not exist'],422);
+        }
+        $student = User::where('id',$student_id)->first();
+        if(is_null($student))
+        {
+            return response(['message'=>'this student does not exist'],422);
+        }else if($student->role != 3)
+        {
+            return response(['message'=>'this person is not a student'],422);
+        }
+        $student_group = DB::select('select `group` from students_groups where student = ?',[$student_id])[0]->group;
+        $ms = [];
+        // get the modules of the current course
+        $modules = Module::where('course',$course_id)->get();
+        foreach($modules as $module)
+        {
+            $m = new Module();
+            $m->id = $module->id;
+            $m->name = $module->name;
+            $m->description = $module->description;
+            $m->duration = $module->duration;
+            $m->teacher = DB::select('select users.full_name from teachers_modules join users on teachers_modules.teacher = users.id where teachers_modules.module = ?;',[$module->id])[0]->full_name;
+
+            $chapters = Chapter::where('module',$module->id)->get();
+            $m->chapters = $chapters;
+            array_push($ms,$m);
+        }
+        $course->modules = $ms;
+        $projects = DB::select('select p.name,gp.deadline from projects p join groups_projects gp on p.id = gp.project where gp.`group` = ?;',[$student_group]);
+        $course->projects = $projects;
+
+        $groups = Group::where('course',$course_id)->get();
+        foreach($groups as $group)
+        {
+            $group->students_count = DB::select('select count(*) as count from students_groups where `group` = ?',[$group->id])[0]->count;
+        }
+        $course->groups = $groups;
+
+        $teachers = DB::select('select users.id,users.full_name, users.image,count(*) as modules_count from users join teachers_modules on users.id = teachers_modules.teacher join modules on teachers_modules.module = modules.id where modules.course = ? group by users.id, users.full_name, users.image',[$course_id]);
 
         $course->teachers = $teachers;
         return response($course);
