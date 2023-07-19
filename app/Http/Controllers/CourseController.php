@@ -179,8 +179,8 @@ class CourseController extends Controller
         }
         $result = [];
         $courses = [];
-
-        $student_courses = DB::select("select g.course from users u join students_groups sg on u.id = sg.student join `groups` g on sg.`group` = g.id;");
+        // get the student courses IDs
+        $student_courses = DB::select("select g.course from users u join students_groups sg on u.id = sg.student join `groups` g on sg.`group` = g.id where u.id = ?;",[$student]);
         foreach($student_courses as $course)
         {
             $course = Course::where('id',$course->course)->first();
@@ -199,13 +199,18 @@ class CourseController extends Controller
                 $modules_count++;
                 $duration = $duration + $module->duration;
             }
+            $group = DB::select('select g.id from students_groups sg join `groups` g on sg.group = g.id where sg.student = ? and g.course = ?;',[$student,$course->id])[0];
+            $presence = DB::select('select count(*) as count from sessions s join presences p on s.id = p.`session` where p.student = ? and s.`group` = ?;',[$student,$group->id])[0]->count;
+            $score = DB::select('select score from groups_projects gp join students_progresses sp on gp.id = sp.group_project where gp.`group` = ? and sp.student = ?;',[$group->id,$student])[0]->score;
             array_push($result,[
                 'id' => $course->id,
                 'name' => $course->name,
                 // 'price' => $course->price,
                 // 'image' => $course->image,
                 'modules' => $modules_count,
-                'duration' => $duration
+                'duration' => $duration,
+                'presence' => $presence,
+                'score' => $score
             ]);
         }
         // modules number

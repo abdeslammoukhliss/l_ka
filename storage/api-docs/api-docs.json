@@ -1,0 +1,39 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "L_KARRIERE APIs ",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/get_users": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "first swagger test",
+                "description": "Multiple status values can be provided with comma separated string",
+                "operationId": "findPetsByStatus",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid status value"
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "bearerAuth",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

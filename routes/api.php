@@ -6,9 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,9 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 // test APIs /////////////////////////////////////////////////////
-Route::get('/users', function (Request $request) {
-    return DB::select('select * from users');
-});
+Route::get('/get_users', [TestController::class,'getUsers']);
 
 Route::post('/general_test', [TestController::class,'tester']);
 
