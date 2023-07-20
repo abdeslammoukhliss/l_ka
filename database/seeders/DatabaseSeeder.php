@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\StudentGroup;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +19,13 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             CategorySeeder::class,
             UserSeeder::class,
-            CourseSeeder::class
+            CourseSeeder::class,
+            GroupSeeder::class,
+            ModuleSeeder::class,
+            ProjectSeeder::class,
+            ChapterSeeder::class,
+            StudentGroupSeeder::class,
+            TeacherModuleSeeder::class
         ]);
     }
 }

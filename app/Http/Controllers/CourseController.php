@@ -12,7 +12,6 @@ use App\Models\Project;
 use App\Models\StudentGroup;
 use App\Models\TeacherModule;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CourseController extends Controller
@@ -205,6 +204,7 @@ class CourseController extends Controller
             array_push($result,[
                 'id' => $course->id,
                 'name' => $course->name,
+                'group' => $group->id,
                 // 'price' => $course->price,
                 // 'image' => $course->image,
                 'modules' => $modules_count,

@@ -32,16 +32,25 @@ Route::post('/forgot_password', [AuthController::class,'sendResetPasswordLink'])
 // user APIs //////////////////////////////////////////////////////
 // get the statistics of admin dashboard
 Route::get('/get_statistics',[UserController::class,'getStatistics']);
+
 Route::post('/change_group',[UserController::class,'changeGroup']);
+
 Route::get('/get_teachers',[UserController::class,'getTeachers']);
+
 Route::get('/get_students',[UserController::class,'getStudents']);
 
 // course APIs //////////////////////////////////////////////////////
+
 Route::post('/add_course',[CourseController::class,'addCourse']);
+
 Route::get('/get_courses',[CourseController::class,'getCourses']);
+
 Route::get('/get_teacher_courses/{teacher}',[CourseController::class,'getTeacherCourses']);
+
 Route::get('/get_student_courses/{student}',[CourseController::class,'getStudentCourses']);
+
 Route::get('/get_course_details/{id}',[CourseController::class,'getCourseDetails']);
+
 Route::get('/get_course_details_for_student/{id}/{student}',[CourseController::class,'getCourseDetailsForStudent']);
 // if the user want to register in a course
 Route::post('/enroll',[CourseController::class,'enroll']);

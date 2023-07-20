@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('student');
             $table->unsignedBigInteger('session');
-            $table->date('date_and_time');
+            $table->date('date');
+            $table->time('time');
 
             $table->foreign('student')->references('id')->on('users');
             $table->foreign('session')->references('id')->on('sessions');

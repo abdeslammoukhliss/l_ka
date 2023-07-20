@@ -42,12 +42,16 @@ class ProjectController extends Controller
         $groups = DB::select('select g.id from students_groups sg join `groups` g on sg.group = g.id where sg.student = ?;',[$student]);
         foreach($groups as $group)
         {
-            $projects = DB::select('select p.name,gp.deadline from projects p join groups_projects gp on p.id = gp.project where gp.`group` = ?',[$group->id]);
+            $projects = DB::select('select p.name,p.module,gp.deadline from projects p join groups_projects gp on p.id = gp.project where gp.`group` = ?',[$group->id]);
             foreach($projects as $project)
             {
+                $module = DB::select('select name from modules where id = ?;',[$project->module])[0]->name;
+                $course = DB::select('select c.name from courses c join modules m on c.id = m.course where m.id = ?;',[$project->module])[0]->name;
                 array_push($result,[
                     'name' => $project->name,
-                    'deadline' => $project->deadline
+                    'deadline' => $project->deadline,
+                    'course' => $course,
+                    'module' => $module
                 ]);
             }
         }
