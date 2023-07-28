@@ -4,7 +4,9 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -65,6 +67,17 @@ Route::get('/get_categories',[CategoryController::class,'getCategories']);
 Route::post('/assign_project', [ProjectController::class,'assignProject']);
 // get the projects of a student
 Route::get('/get_student_projects/{student}', [ProjectController::class,'getStudentProjects']);
+
+
+// group APIs ////////////////////////////////////////////////////////
+Route::get('/get_course_groups/{course}',[GroupController::class,'getCourseGroups']);
+
+
+// session APIs ////////////////////////////////////////////////////////
+Route::post('/add_session',[SessionController::class,'addSession']);
+
+Route::post('/add_presence',[SessionController::class,'addPresence']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
