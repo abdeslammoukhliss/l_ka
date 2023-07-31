@@ -67,8 +67,13 @@ class UserController extends Controller
         $result = [];
         foreach($student_courses as $item)
         {
-            $sessions = DB::select('select s.id ,s.date_and_time from sessions s join presences p on s.id = p.`session` where p.student = ? and s.`group` = ?;',[$item->user_id,$item->group_id]);
-            $score = DB::select('select score from groups_projects gp join students_progresses sp on gp.id = sp.group_project where gp.`group` = ? and sp.student = ?;',[$item->group_id,$item->user_id])[0]->score;
+            $sessions = DB::select('select s.id , s.date, s.time from sessions s join presences p on s.id = p.`session` where p.student = ? and s.`group` = ?;',[$item->user_id,$item->group_id]);
+            $pre_score = DB::select('select score from groups_projects gp join students_progresses sp on gp.id = sp.group_project where gp.`group` = ? and sp.student = ?;',[$item->group_id,$item->user_id]);
+            $score = 0;
+            if($pre_score!=null)
+            {
+                $score = $pre_score[0]->score;
+            }
             array_push($result,[
                 'full_name' => $item->user_full_name,
                 'course' => $item->course_name,
