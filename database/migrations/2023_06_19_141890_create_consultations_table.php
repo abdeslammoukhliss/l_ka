@@ -15,13 +15,18 @@ return new class extends Migration
     {
         Schema::create('consultations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('description');
-            $table->unsignedInteger('status');
+            $table->string('subject');
+            $table->text('description');
             $table->date('date');
+            $table->unsignedBigInteger('status');
+            $table->unsignedBigInteger('course');
             $table->unsignedBigInteger('student');
+            $table->unsignedBigInteger('teacher')->nullable();
             
+            $table->foreign('status')->references('id')->on('consultations_statuses');
+            $table->foreign('course')->references('id')->on('courses');
             $table->foreign('student')->references('id')->on('users');
+            $table->foreign('teacher')->references('id')->on('users');
             $table->timestamps();
         });
     }

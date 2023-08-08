@@ -68,4 +68,9 @@ class SessionController extends Controller
 
         return response(['message'=>'you have pointed successfully']);
     }
+
+    public function getSessions()
+    {
+        return Session::get(['id','date','time','duration','group']);
+    }
 }

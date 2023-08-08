@@ -4,6 +4,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SessionController;
@@ -77,6 +78,13 @@ Route::get('/get_course_groups/{course}',[GroupController::class,'getCourseGroup
 Route::post('/add_session',[SessionController::class,'addSession']);
 
 Route::post('/add_presence',[SessionController::class,'addPresence']);
+
+Route::get('/get_sessions',[SessionController::class,'getSessions']);
+
+// consultation APIs /////////////////////////////////////////////////////
+Route::post('/add_consultation',[ConsultationController::class,'addConsultation']);
+
+Route::get('/get_consultations',[ConsultationController::class,'getConsultations']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
