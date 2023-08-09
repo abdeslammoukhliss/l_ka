@@ -116,6 +116,41 @@ class CourseController extends Controller
         return response($result,200);
     }
 
+    public function getCoursesWithDetails()
+    {
+        $courses = Course::get('id');
+        foreach($courses as $course)
+        {
+            $ms = [];
+            // get the modules of the current course
+            $modules = Module::where('course',$course->id)->get();
+            foreach($modules as $module)
+            {
+                $m = new Module();
+                $m->id = $module->id;
+                $projects = Project::where('module',$module->id)->get('id');
+                $m->projects = $projects;
+    
+                $chapters = Chapter::where('module',$module->id)->get('id');
+                $m->chapters = $chapters;
+                array_push($ms,$m);
+            }
+            $course->modules = $ms;
+    
+            $groups = Group::where('course',$course->id)->get('id');
+            // foreach($groups as $group)
+            // {
+            //     $group->students_count = DB::select('select count(*) as count from students_groups where `group` = ?',[$group->id])[0]->count;
+            // }
+            $course->groups = $groups;
+    
+            $teachers = DB::select('select distinct tm.teacher from teachers_modules tm join modules m on tm.module = m.id where m.course = ?',[$course->id]);
+    
+            $course->teachers = $teachers;
+        }
+        return response($courses);
+    }
+
     public function getTeacherCourses($teacher)
     {
         $value = User::where('id',$teacher)->first();

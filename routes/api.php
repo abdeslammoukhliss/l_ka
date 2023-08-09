@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
@@ -48,6 +49,8 @@ Route::post('/add_course',[CourseController::class,'addCourse']);
 
 Route::get('/get_courses',[CourseController::class,'getCourses']);
 
+Route::get('/get_courses_with_details',[CourseController::class,'getCoursesWithDetails']);
+
 Route::get('/get_teacher_courses/{teacher}',[CourseController::class,'getTeacherCourses']);
 
 Route::get('/get_student_courses/{student}',[CourseController::class,'getStudentCourses']);
@@ -62,6 +65,10 @@ Route::post('/enroll',[CourseController::class,'enroll']);
 // get all categories
 Route::get('/get_categories',[CategoryController::class,'getCategories']);
 
+// module APIs ///////////////////////////////////////////////////
+// get all modules
+Route::get('/get_all_modules',[ModuleController::class,'getAllModules']);
+
 
 // project APIs ////////////////////////////////////////////////////////
 // assign a student to a project
@@ -69,9 +76,12 @@ Route::post('/assign_project', [ProjectController::class,'assignProject']);
 // get the projects of a student
 Route::get('/get_student_projects/{student}', [ProjectController::class,'getStudentProjects']);
 
+Route::get('/get_all_projects', [ProjectController::class,'getAllProjects']);
+
 
 // group APIs ////////////////////////////////////////////////////////
 Route::get('/get_course_groups/{course}',[GroupController::class,'getCourseGroups']);
+Route::get('/get_all_groups',[GroupController::class,'getAllGroups']);
 
 
 // session APIs ////////////////////////////////////////////////////////

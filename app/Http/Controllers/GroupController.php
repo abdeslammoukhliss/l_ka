@@ -26,4 +26,9 @@ class GroupController extends Controller
         }
         return response($result);
     }
+
+    public function getAllGroups()
+    {
+        return Group::get(['id','name','course']);
+    }
 }

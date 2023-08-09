@@ -22,14 +22,14 @@ class ConsultationController extends Controller
         $user = User::where('id',$fields['student'])->first();
         if($user->role!=3)
         {
-            return response(['message'=>'this user is not a student']);
+            return response(['message'=>'this user is not a student'],422);
         }
 
         $students_group = DB::select('select * from students_groups sg join `groups` g on sg.group = g.id where g.course = ? and sg.student = ?;',[$fields['course'],$fields['student']]);
         
         if(sizeof($students_group)==0)
         {
-            return response(['message'=>'you are not enrolled in that course']);
+            return response(['message'=>'you are not enrolled in that course'],422);
         }
 
         $consultation = new Consultation();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\GroupProject;
+use App\Models\Project;
 use App\Models\StudentGroup;
 use App\Models\StudentProgress;
 use Illuminate\Http\Request;
@@ -56,5 +57,10 @@ class ProjectController extends Controller
             }
         }
         return response($result);
+    }
+
+    public function getAllProjects()
+    {
+        return Project::get(['id','name','description']);
     }
 }

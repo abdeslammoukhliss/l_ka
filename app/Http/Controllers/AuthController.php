@@ -59,11 +59,10 @@ class AuthController extends Controller
                 'message' => 'the password is uncorrect'
             ],422);
         }
-        // $token = $user->createToken('myapptoken')->plainTextToken;
-
+        $token = $user->createToken('myapptoken')->plainTextToken;
+        $user['token'] = $token;
         return response([
             'user' => $user,
-            // 'token' => $token
         ],200);
     }
 
