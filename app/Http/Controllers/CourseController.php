@@ -118,34 +118,32 @@ class CourseController extends Controller
 
     public function getCoursesWithDetails()
     {
-        $courses = Course::get('id');
+        $courses = Course::get(['id','name','description','image','category','price']);
         foreach($courses as $course)
         {
-            $ms = [];
             // get the modules of the current course
-            $modules = Module::where('course',$course->id)->get();
-            foreach($modules as $module)
+            $ms = Module::where('course',$course->id)->get('id');
+            $modules = [];
+            foreach($ms as $m)
             {
-                $m = new Module();
-                $m->id = $module->id;
-                $projects = Project::where('module',$module->id)->get('id');
-                $m->projects = $projects;
-    
-                $chapters = Chapter::where('module',$module->id)->get('id');
-                $m->chapters = $chapters;
-                array_push($ms,$m);
+                array_push($modules,$m->id);
             }
-            $course->modules = $ms;
+            $course->modules = $modules;
     
-            $groups = Group::where('course',$course->id)->get('id');
-            // foreach($groups as $group)
-            // {
-            //     $group->students_count = DB::select('select count(*) as count from students_groups where `group` = ?',[$group->id])[0]->count;
-            // }
+            $gs = Group::where('course',$course->id)->get('id');
+            $groups = [];
+            foreach($gs as $g)
+            {
+                array_push($groups,$g->id);
+            }
             $course->groups = $groups;
     
-            $teachers = DB::select('select distinct tm.teacher from teachers_modules tm join modules m on tm.module = m.id where m.course = ?',[$course->id]);
-    
+            $ts = DB::select('select distinct tm.teacher as id from teachers_modules tm join modules m on tm.module = m.id where m.course = ?',[$course->id]);
+            $teachers = [];
+            foreach($ts as $t)
+            {
+                array_push($teachers,$t->id);
+            }
             $course->teachers = $teachers;
         }
         return response($courses);

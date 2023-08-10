@@ -4,6 +4,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ModuleController;
@@ -68,6 +69,10 @@ Route::get('/get_categories',[CategoryController::class,'getCategories']);
 // module APIs ///////////////////////////////////////////////////
 // get all modules
 Route::get('/get_all_modules',[ModuleController::class,'getAllModules']);
+
+// chapter APIs ///////////////////////////////////////////////////
+// get all chapters
+Route::get('/get_all_chapters',[ChapterController::class,'getAllChapters']);
 
 
 // project APIs ////////////////////////////////////////////////////////
