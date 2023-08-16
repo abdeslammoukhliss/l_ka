@@ -101,6 +101,8 @@ Route::post('/add_consultation',[ConsultationController::class,'addConsultation'
 
 Route::get('/get_consultations',[ConsultationController::class,'getConsultations']);
 
+Route::get('/get_student_consultations/{student}',[ConsultationController::class,'getStudentConsultations']);
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

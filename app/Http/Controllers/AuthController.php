@@ -12,9 +12,19 @@ use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function addUser(AddUserRequest $request)
+    public function addUser(Request $request)
     {
-        $fields = $request->validated();
+        // return response(['message'=>'custom error'],422);
+        $fields = $request->validate([
+            'full_name' => 'required|string|max:50',
+            'email' => 'required|string|unique:users,email|max:100',
+            'password' => 'required|string|max:50',
+            'phone_number' => 'required|string|unique:users,phone_number|min:10|max:15',
+            'city' => 'required|string|max:50',
+            'gender' => 'required|integer|min:1|max:2',
+            'role' => 'required|integer|min:2|max:3',
+            'image' => 'nullable|image'
+        ]);
 
         $registration_token = Str::random(64);
 
@@ -29,10 +39,10 @@ class AuthController extends Controller
         $user->role = $fields['role'];
         $user->save();
 
-        // Mail::send('email_verification', ['id' => $user->id,'token' => $registration_token], function($message) use($request){
-        //     $message->to($request->email);
-        //     $message->subject('Email Verification Mail');
-        // });
+        Mail::send('email_verification', ['id' => $user->id,'token' => $registration_token], function($message) use($request){
+            $message->to($request->email);
+            $message->subject('Email Verification Mail');
+        });
 
         return response(['message'=>'user inserted successfully'],201);
     }

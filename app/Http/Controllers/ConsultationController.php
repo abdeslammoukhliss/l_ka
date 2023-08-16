@@ -19,17 +19,15 @@ class ConsultationController extends Controller
             'date' => 'required|date',
         ]);
 
-        $user = User::where('id',$fields['student'])->first();
-        if($user->role!=3)
-        {
-            return response(['message'=>'this user is not a student'],422);
+        $user = User::where('id', $fields['student'])->first();
+        if ($user->role != 3) {
+            return response(['message' => 'this user is not a student'], 422);
         }
 
-        $students_group = DB::select('select * from students_groups sg join `groups` g on sg.group = g.id where g.course = ? and sg.student = ?;',[$fields['course'],$fields['student']]);
-        
-        if(sizeof($students_group)==0)
-        {
-            return response(['message'=>'you are not enrolled in that course'],422);
+        $students_group = DB::select('select * from students_groups sg join `groups` g on sg.group = g.id where g.course = ? and sg.student = ?;', [$fields['course'], $fields['student']]);
+
+        if (sizeof($students_group) == 0) {
+            return response(['message' => 'you are not enrolled in that course'], 422);
         }
 
         $consultation = new Consultation();
@@ -41,11 +39,29 @@ class ConsultationController extends Controller
         $consultation->status = 1;
         $consultation->save();
 
-        return response(['message'=>'created successfully']);
+        return response(['message' => 'created successfully']);
     }
-    
+
     public function getConsultations()
     {
-        return Consultation::get(['id','subject','description','date','status','course','student','teacher']);
+        return Consultation::get(['id', 'subject', 'description', 'date', 'status', 'course', 'student', 'teacher']);
+    }
+
+    public function getStudentConsultations($student)
+    {
+        $user = User::where('id', $student)->first();
+        if (is_null($user)) 
+        {
+            return response(['message' => 'this user does not exist'], 422);
+        }
+        if ($user->role != 3) 
+        {
+            return response(['message' => 'this user is not a student']);
+        }
+        $consultations = DB::select(
+            'select co.name as course, c.subject, c.description, cs.name as status, c.date from consultations_statuses cs join consultations c on cs.id = c.status join courses co on c.course = co.id where c.student = ?;',
+            [$student]
+        );
+        return $consultations;
     }
 }
