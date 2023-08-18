@@ -44,7 +44,8 @@ class ConsultationController extends Controller
 
     public function getConsultations()
     {
-        return Consultation::get(['id', 'subject', 'description', 'date', 'status', 'course', 'student', 'teacher']);
+        $consultations = DB::select('select c.id, c.subject, c.description,c.date ,cs.name as status,co.name as course, u1.full_name as student, u2.full_name as teacher, c.id from consultations c join users u1 on c.student = u1.id join users u2 on c.teacher = u2.id join courses co on c.course = co.id join consultations_statuses cs on c.status = cs.id;');
+        return $consultations;
     }
 
     public function getStudentConsultations($student)

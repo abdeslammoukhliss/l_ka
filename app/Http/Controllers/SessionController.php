@@ -8,6 +8,7 @@ use App\Models\StudentGroup;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SessionController extends Controller
 {
@@ -71,6 +72,7 @@ class SessionController extends Controller
 
     public function getSessions()
     {
-        return Session::get(['id','date','time','duration','group']);
+        $sessions = DB::select('select s.id, c.name as course, s.date, s.time, s.duration, g.name as `group` from sessions s join `groups` g on s.group = g.id join courses c on c.id = g.course;');
+        return $sessions;
     }
 }
