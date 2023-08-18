@@ -64,4 +64,24 @@ class ConsultationController extends Controller
         );
         return $consultations;
     }
+
+    public function editConsultation(Request $request)
+    {
+        $fields = $request->validate([
+            'consultation' => 'required|integer|exists:consultations,id',
+            'decision' => 'required|integer|min:0|max:1'
+        ]);
+
+        $consultation = Consultation::where('id',$fields['consultation'])->first();
+        if($fields['decision'] == 1)
+        {
+            $consultation->status = 2;
+            $consultation->save();
+            return response(['message','you have confirmed the consultation successfully'],422);
+        } else 
+        {
+            $consultation->delete();
+            return response(['message','you have rejected the consultation successfully'],422);
+        }
+    }
 }

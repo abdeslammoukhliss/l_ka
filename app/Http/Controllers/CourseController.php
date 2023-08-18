@@ -49,7 +49,9 @@ class CourseController extends Controller
             $group->save();
         }
 
-        $modules = $fields['modules'];
+        if(!is_null($fields['module']))
+        {
+            $modules = $fields['modules'];
         foreach($modules as $m)
         {
             $module = new Module();
@@ -83,6 +85,7 @@ class CourseController extends Controller
                 $chapter->module = $module->id;
                 $chapter->save();
             }
+        }
         }
         
         return response(["message"=>"congrat baby"],201);

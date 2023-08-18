@@ -99,6 +99,8 @@ Route::get('/get_sessions',[SessionController::class,'getSessions']);
 // consultation APIs /////////////////////////////////////////////////////
 Route::post('/add_consultation',[ConsultationController::class,'addConsultation']);
 
+Route::post('/edit_consultation',[ConsultationController::class,'editConsultation']);
+
 Route::get('/get_consultations',[ConsultationController::class,'getConsultations']);
 
 Route::get('/get_student_consultations/{student}',[ConsultationController::class,'getStudentConsultations']);

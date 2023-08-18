@@ -32,7 +32,7 @@ class AddCourseRequest extends FormRequest
             'image' => 'nullable|image',
             'groups' => 'required|present',
                 'groups.*.name' => 'required|string',
-            'modules' => 'required|present',
+            'modules' => 'nullable|present',
                 'modules.*.name' => 'required|string',
                 'modules.*.description' => 'required|string',
                 'modules.*.duration' => 'required|integer',
