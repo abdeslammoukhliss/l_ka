@@ -69,19 +69,32 @@ class ConsultationController extends Controller
     {
         $fields = $request->validate([
             'consultation' => 'required|integer|exists:consultations,id',
-            'decision' => 'required|integer|min:0|max:1'
+            'decision' => 'required|integer|min:0|max:1',
+            'teacher' => 'nullable|integer|exists:users,id'
         ]);
 
         $consultation = Consultation::where('id',$fields['consultation'])->first();
-        if($fields['decision'] == 1)
-        {
-            $consultation->status = 2;
-            $consultation->save();
-            return response(['message','you have confirmed the consultation successfully'],422);
-        } else 
+        if($fields['decision'] == 0)
         {
             $consultation->delete();
-            return response(['message','you have rejected the consultation successfully'],422);
+            return response(['message'=>'you have rejected the consultation successfully'],422);
+        } else 
+        {
+            $consultation->status = 2;
+            if(!isset($fields['teacher']))
+            {
+                return response(['message'=> 'you didn\'t insert the teacher'],422);
+            }else 
+            {
+                $teacher = User::where('id',$fields['teacher'])->first();
+                if($teacher->role!=2)
+                {
+                    return response(['message'=>'this user is not a teacher'],422);
+                }
+                $consultation->teacher = $fields['teacher'];
+                $consultation->save();
+                return response(['message'=>'you have confirmed the consultation successfully'],422);
+            }
         }
     }
 }
