@@ -75,4 +75,19 @@ class SessionController extends Controller
         $sessions = DB::select('select s.id, c.name as course, s.date, s.time, s.duration, g.name as `group` from sessions s join `groups` g on s.group = g.id join courses c on c.id = g.course;');
         return $sessions;
     }
+    
+    public function getStudentSessions($student_id)
+    {
+        $student = User::where('id',$student_id)->first();
+        if(is_null($student))
+        {
+            return response(['message'=>'this student does not exist'],422);
+        }
+        if($student->role != 3)
+        {
+            return response(['message'=>'this user is not a student'],422);
+        }
+        $sessions = DB::select('select s.id, c.name as course, s.date, s.time, s.duration, g.name as `group` from sessions s join `groups` g on s.group = g.id join courses c on c.id = g.course join students_groups sg on g.id = sg.group where sg.student = 4;');
+        return $sessions;
+    }
 }

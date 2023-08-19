@@ -97,6 +97,8 @@ Route::post('/add_presence',[SessionController::class,'addPresence']);
 
 Route::get('/get_sessions',[SessionController::class,'getSessions']);
 
+Route::get('/get_student_sessions/{student_id}',[SessionController::class,'getStudentSessions']);
+
 // consultation APIs /////////////////////////////////////////////////////
 Route::post('/add_consultation',[ConsultationController::class,'addConsultation']);
 
@@ -112,6 +114,7 @@ Route::post('/add_payment',[PaymentController::class,'addPayment']);
 
 Route::get('/get_payments',[PaymentController::class,'getPayments']);
 
+Route::get('/get_student_rest/{student_id}',[PaymentController::class,'getStudentRest']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

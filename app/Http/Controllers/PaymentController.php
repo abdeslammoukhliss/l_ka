@@ -49,4 +49,19 @@ class PaymentController extends Controller
         $result = DB::select('select u.id, u.full_name, c.name as course, p.rest, c.price from users u join payments p on u.id = p.student join payments_details pd on p.id = pd.payment join courses c on p.course = c.id;');
         return response($result);
     }
+
+    public function getStudentRest($student_id)
+    {
+        $student = User::where('id',$student_id)->first();
+        if(is_null($student))
+        {
+            return response(['message'=>'this student does not exist'],422);
+        }
+        if($student->role != 3)
+        {
+            return response(['message'=>'this user is not a student'],422);
+        }
+        $result = DB::select('select c.name, p.rest from payments p join courses c on p.course = c.id where p.student = ?',[$student_id]);
+        return response($result);
+    }
 }

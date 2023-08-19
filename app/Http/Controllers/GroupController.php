@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Course;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GroupController extends Controller
 {
@@ -29,6 +30,11 @@ class GroupController extends Controller
 
     public function getAllGroups()
     {
-        return Group::get(['id','name','course']);
+        $groups = Group::get(['id','name','course']);
+        foreach($groups as $group)
+        {
+            $group->students_count = DB::select('select count(*) as count from students_groups where `group` = ?',[$group->id])[0]->count;
+        }
+        return $groups;
     }
 }

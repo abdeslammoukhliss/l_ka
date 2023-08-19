@@ -43,7 +43,7 @@ class ProjectController extends Controller
         $groups = DB::select('select g.id from students_groups sg join `groups` g on sg.group = g.id where sg.student = ?;',[$student]);
         foreach($groups as $group)
         {
-            $projects = DB::select('select p.name,p.module,gp.deadline from projects p join groups_projects gp on p.id = gp.project where gp.`group` = ?',[$group->id]);
+            $projects = DB::select('select p.name,p.module, p.description,gp.deadline, gp.affected_date from projects p join groups_projects gp on p.id = gp.project where gp.`group` = ?',[$group->id]);
             foreach($projects as $project)
             {
                 $module = DB::select('select name from modules where id = ?;',[$project->module])[0]->name;
@@ -51,6 +51,8 @@ class ProjectController extends Controller
                 array_push($result,[
                     'name' => $project->name,
                     'deadline' => $project->deadline,
+                    'affected_date' => $project->affected_date,
+                    'description' => $project->description,
                     'course' => $course,
                     'module' => $module
                 ]);
@@ -61,6 +63,11 @@ class ProjectController extends Controller
 
     public function getAllProjects()
     {
-        return Project::get(['id','name','description']);
+        $projects = Project::get(['id','name','description']);
+        foreach($projects as $project)
+        {
+            $detail_project = DB::select('select affected_date,deadline from groups_projects where project = ?',[$project->id])[0];
+            // $project-> 
+        }
     }
 }
