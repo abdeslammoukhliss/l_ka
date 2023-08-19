@@ -8,6 +8,7 @@ use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Group;
 use App\Models\Module;
+use App\Models\Payment;
 use App\Models\Project;
 use App\Models\StudentGroup;
 use App\Models\TeacherModule;
@@ -361,6 +362,15 @@ class CourseController extends Controller
         $student_group->group = $group->id;
         $student_group->registration_date = now();
         $student_group->save();
+
+        $course = Course::where('id',$fields['course_id'])->first();
+
+        $payment = new Payment();
+        $payment->total = 0;
+        $payment->rest = $course->price;
+        $payment->course = $course->id;
+        $payment->student = $fields['student_id'];
+        $payment->save();
 
         return response(['message'=>'you have enrolled successfully']);
     }

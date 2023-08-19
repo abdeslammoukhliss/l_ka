@@ -8,6 +8,7 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\UserController;
@@ -104,6 +105,12 @@ Route::post('/edit_consultation',[ConsultationController::class,'editConsultatio
 Route::get('/get_consultations',[ConsultationController::class,'getConsultations']);
 
 Route::get('/get_student_consultations/{student}',[ConsultationController::class,'getStudentConsultations']);
+
+
+// payment APIs /////////////////////////////////////////////////////
+Route::post('/add_payment',[PaymentController::class,'addPayment']);
+
+Route::get('/get_payments',[PaymentController::class,'getPayments']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
