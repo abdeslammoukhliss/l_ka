@@ -44,7 +44,30 @@ class ConsultationController extends Controller
 
     public function getConsultations()
     {
-        $consultations = DB::select('select c.id, c.subject, c.description,c.date ,cs.name as status,co.name as course, u1.full_name as student, u2.full_name as teacher, c.id from consultations c join users u1 on c.student = u1.id join users u2 on c.teacher = u2.id join courses co on c.course = co.id join consultations_statuses cs on c.status = cs.id;');
+        $result = [];
+        $consultations = DB::select('select c.id, c.subject, c.description,c.date ,cs.name as status,co.name as course, u1.full_name as student, c.id from consultations c join users u1 on c.student = u1.id join courses co on c.course = co.id join consultations_statuses cs on c.status = cs.id;');
+        // foreach($consultations as $consultation)
+        // {
+        //     $teacher = DB::select('select u.full_name as teacher from consultations c join users u on c.teacher = u.id where c.id = ?;',[$consultation->id]);
+        //     if(sizeof($teacher)>0)
+        //     {
+        //         $teacher = $teacher[0]->teacher;
+        //     } else
+        //     {
+        //         $teacher = null;
+        //     }
+        //     // array_push($result,$teacher);
+        //     array_push($result,[
+        //         'id' => $consultation->id,
+        //         'subject' => $consultation->subject,
+        //         'description' => $consultation->description,
+        //         'date' => $consultation->date,
+        //         'status' => $consultation->status,
+        //         'course' => $consultation->course,
+        //         'student' => $consultation->student,
+        //         'teacher' => $teacher
+        //     ]);
+        // }
         return $consultations;
     }
 
