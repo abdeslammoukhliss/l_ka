@@ -82,11 +82,12 @@ class ConsultationController extends Controller
         {
             return response(['message' => 'this user is not a student']);
         }
-        $consultations = DB::select(
-            'select co.name as course, c.subject, c.description, cs.name as status, c.date from consultations_statuses cs join consultations c on cs.id = c.status join courses co on c.course = co.id where c.student = ?;',
-            [$student]
-        );
-        return $consultations;
+        // $consultations = DB::select(
+        //     'select co.name as course, c.subject, c.description, cs.name as status, c.date from consultations_statuses cs join consultations c on cs.id = c.status join courses co on c.course = co.id where c.student = ?;',
+        //     [$student]
+        // );
+        $consultations = Consultation::where('id',$student)->get(['id','subject','description','date','course','status']);
+        return response($consultations);
     }
 
     public function editConsultation(Request $request)
