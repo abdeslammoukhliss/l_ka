@@ -61,7 +61,8 @@ class PaymentController extends Controller
         {
             return response(['message'=>'this user is not a student'],422);
         }
-        $result = DB::select('select c.name, p.rest from payments p join courses c on p.course = c.id where p.student = ?',[$student_id]);
+        // $result = DB::select('select c.id, p.rest from payments p join courses c on p.course = c.id where p.student = ?',[$student_id]);
+        $result = Payment::where('student',$student_id)->get(['course','rest']);
         return response($result);
     }
 }
