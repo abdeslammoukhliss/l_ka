@@ -126,29 +126,33 @@ class CourseController extends Controller
         foreach($courses as $course)
         {
             // get the modules of the current course
-            $ms = Module::where('course',$course->id)->get('id');
+            $ms = Module::where('course',$course->id)->get();
+            $duration=$ms->avg('duration');
             $modules = [];
             foreach($ms as $m)
             {
                 array_push($modules,$m->id);
             }
-            $course->modules = $modules;
-    
+            
+            $course["duration"]=$duration;
+            $course->modules = $ms->map(function ($module) {
+                return ['id' => $module->id];
+            });
+            
             $gs = Group::where('course',$course->id)->get('id');
-            $groups = [];
-            foreach($gs as $g)
-            {
-                array_push($groups,$g->id);
-            }
-            $course->groups = $groups;
+            // $groups = [];
+          
+            $course->groups = $gs;
     
             $ts = DB::select('select distinct tm.teacher as id from teachers_modules tm join modules m on tm.module = m.id where m.course = ?',[$course->id]);
-            $teachers = [];
-            foreach($ts as $t)
-            {
-                array_push($teachers,$t->id);
-            }
-            $course->teachers = $teachers;
+            // $teachers = [];
+            // foreach($ts as $t)
+            // {
+            //     array_push($teachers,$t->id);
+            // }
+             $course->teachers = $ts;
+
+             
         }
         return response($courses);
     }
@@ -208,10 +212,10 @@ class CourseController extends Controller
         $value = User::where('id',$student)->first();
         if(is_null($value))
         {
-            return response(['message'=>'this student does not exist']);
+            return response(['message'=>'this student does not exist'],422);
         }else if($value->role != 3)
         {
-            return response(['message'=>'this user is not a student']);
+            return response(['message'=>'this user is not a student'],422);
         }
         $result = [];
         $courses = [];
@@ -244,7 +248,7 @@ class CourseController extends Controller
                 'group' => $group->id,
                 // 'price' => $course->price,
                 // 'image' => $course->image,
-                'modules' => $modules_count,
+                //'modules' => $modules_count,
                 'duration' => $duration,
                 'presence' => $presence,
                 'score' => $score

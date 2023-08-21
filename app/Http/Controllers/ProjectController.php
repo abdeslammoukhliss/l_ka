@@ -55,7 +55,7 @@ class ProjectController extends Controller
                     'affected_date' => $project->affected_date,
                     'description' => $project->description,
                     'course' => $course,
-                    'module' => $project->module
+                    'moduleId' => $project->module
                 ]);
             }
         }
