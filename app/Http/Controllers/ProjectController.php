@@ -43,18 +43,19 @@ class ProjectController extends Controller
         $groups = DB::select('select g.id from students_groups sg join `groups` g on sg.group = g.id where sg.student = ?;',[$student]);
         foreach($groups as $group)
         {
-            $projects = DB::select('select p.name,p.module, p.description,gp.deadline, gp.affected_date from projects p join groups_projects gp on p.id = gp.project where gp.`group` = ?',[$group->id]);
+            $projects = DB::select('select p.id, p.name,p.module, p.description,gp.deadline, gp.affected_date from projects p join groups_projects gp on p.id = gp.project where gp.`group` = ?',[$group->id]);
             foreach($projects as $project)
             {
-                $module = DB::select('select name from modules where id = ?;',[$project->module])[0]->name;
-                $course = DB::select('select c.name from courses c join modules m on c.id = m.course where m.id = ?;',[$project->module])[0]->name;
+                // $module = DB::select('select name from modules where id = ?;',[$project->module])[0]->name;
+                $course = DB::select('select c.id from courses c join modules m on c.id = m.course where m.id = ?;',[$project->module])[0]->id;
                 array_push($result,[
+                    'id' => $project->id,
                     'name' => $project->name,
                     'deadline' => $project->deadline,
                     'affected_date' => $project->affected_date,
                     'description' => $project->description,
                     'course' => $course,
-                    'module' => $module
+                    'module' => $project->module
                 ]);
             }
         }
