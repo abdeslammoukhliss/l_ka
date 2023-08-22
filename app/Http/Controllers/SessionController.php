@@ -35,8 +35,8 @@ class SessionController extends Controller
         $fields = $request->validate([
             'student' => 'required|integer|exists:users,id',
             'session' => 'required|integer|exists:sessions,id',
-            'date' => 'required|date_format:format,Y-m-d',
-            'time' => 'required|date_format:format,H:i',
+            // 'date' => 'required|date_format:format,Y-m-d',
+            // 'time' => 'required|date_format:format,H:i',
         ]);
 
         $user = User::where('id',$fields['student'])->first();
@@ -47,7 +47,7 @@ class SessionController extends Controller
             ],422);
         }
         $session = Session::where('id',$fields['session'])->first();
-        if($session->date != $fields['date'])
+        if(Carbon::now()->format('Y-m-d') != $session->date)
         {
             return response(['message'=>'this session is passed or didn\'t reached'],422);
         }
@@ -64,7 +64,7 @@ class SessionController extends Controller
         $presence = new Presence();
         $presence->session = $fields['session'];
         $presence->student = $fields['student'];
-        $presence->time = $fields['time'];
+        $presence->time = Carbon::now()->format('H:i');
         $presence->save();
 
         return response(['message'=>'you have pointed successfully']);

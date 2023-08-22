@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Consultation;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +17,7 @@ class ConsultationController extends Controller
             'course' => 'required|integer|exists:courses,id',
             'subject' => 'required|string',
             'description' => 'required|string',
-            'date' => 'required|date',
+            // 'date' => 'required|date',
         ]);
 
         $user = User::where('id', $fields['student'])->first();
@@ -35,7 +36,7 @@ class ConsultationController extends Controller
         $consultation->course = $fields['course'];
         $consultation->subject = $fields['subject'];
         $consultation->description = $fields['description'];
-        $consultation->date = $fields['date'];
+        $consultation->date = Carbon::now()->format('Y-m-d');
         $consultation->status = 1;
         $consultation->save();
 
