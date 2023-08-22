@@ -50,9 +50,8 @@ class CourseController extends Controller
             $group->save();
         }
 
-        if(!is_null($fields['module']))
-        {
-            $modules = $fields['modules'];
+        
+        $modules = $fields['modules'];
         foreach($modules as $m)
         {
             $module = new Module();
@@ -87,9 +86,8 @@ class CourseController extends Controller
                 $chapter->save();
             }
         }
-        }
         
-        return response(["message"=>"congrat baby"],201);
+        return response(["message"=>"course inserte succefully"],201);
     }
 
     public function getCourses()

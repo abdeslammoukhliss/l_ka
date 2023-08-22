@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             CategorySeeder::class,
             ConsultationStatusSeeder::class,
+            StudyMethodSeeder::class,
+            ShiftSeeder::class,
             UserSeeder::class,
             CourseSeeder::class,
             GroupSeeder::class,
