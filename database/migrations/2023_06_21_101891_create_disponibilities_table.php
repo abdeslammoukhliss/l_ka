@@ -13,19 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('students_groups', function (Blueprint $table) {
+        Schema::create('disponibilities', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('student');
-            $table->unsignedBigInteger('group');
-            $table->unsignedBigInteger('study_method');
-            $table->date('registration_date');
+            $table->unsignedBigInteger('day');
+            $table->unsignedBigInteger('shift');
 
             $table->foreign('student')->references('id')->on('users');
-            $table->foreign('group')->references('id')->on('groups');
-            $table->foreign('study_method')->references('id')->on('study_methods');
+            $table->foreign('group_project')->references('id')->on('groups_projects');
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.
@@ -34,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('students_groups');
+        Schema::dropIfExists('students_progresses');
     }
 };

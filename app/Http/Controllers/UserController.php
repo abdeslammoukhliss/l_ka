@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Consultation;
 use App\Models\Group;
 use App\Models\StudentGroup;
 use App\Models\User;
@@ -50,13 +51,16 @@ class UserController extends Controller
             return response(['message'=>'the change from a course to another is not possible']);
         }
 
-        $student_group = new StudentGroup();
-        $student_group->student = $user->id;
-        $student_group->group = $fields['group'];
-        $student_group->registration_date = $old_student_group->registration_date;
-        $student_group->save();
+        $old_student_group->group = $fields['group'];
+        $old_student_group->save();
 
-        StudentGroup::where('id',$old_student_group->id)->delete();
+        // $student_group = new StudentGroup();
+        // $student_group->student = $user->id;
+        // $student_group->group = $fields['group'];
+        // $student_group->registration_date = $old_student_group->registration_date;
+        // $student_group->save();
+
+        // StudentGroup::where('id',$old_student_group->id)->delete();
 
         return response(['message'=>'student group have changed successfully']);
     }
@@ -90,7 +94,9 @@ class UserController extends Controller
         foreach($teachers as $teacher)
         {
             $courses = DB::select('select distinct c.id, c.name from teachers_modules tm join modules m on tm.module = m.id join courses c on m.course = c.id where tm.teacher = ?;',[$teacher->id]);
+            $consultations = DB::select('select c.id, c.subject, c.description,c.date ,cs.name as status,co.name as course, u1.full_name as student, c.id from consultations c join users u1 on c.student = u1.id join courses co on c.course = co.id join consultations_statuses cs on c.status = cs.id where c.teacher = ?;',[$teacher->id]);
             $teacher->courses = $courses;
+            $teacher->consultations = $consultations;
         }
         return response($teachers);        
     }
