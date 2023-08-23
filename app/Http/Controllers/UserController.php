@@ -102,4 +102,81 @@ class UserController extends Controller
         }
         return response($teachers);        
     }
+
+    public function editProfile(Request $request)
+    {
+        $fields = $request->validate([
+            'id' => 'required|integer',
+            'full_name' => 'required|string|max:50',
+            'phone_number' => 'required|string|unique:users,phone_number|max:20',
+            'city' => 'required|string|max:20',
+            'gender' => 'required|string|min:0|max:1',
+            'image' => 'nullable|image'
+        ]);
+        $user = User::where('id',$fields['id'])->first();
+        if(is_null($user))
+        {
+            return response(['message'=>'user not found'],422);
+        }
+        if(!isset($fields['image'])){
+            $user = User::where('id',$fields['id'])->update([
+                'first_name' => $fields['first_name'],
+                'last_name' => $fields['last_name'],
+                'phone_number' => $fields['phone_number'],
+                'address' => $fields['address']
+            ]);
+        }else {
+            // get the name of the old image
+            $last_image = $user->image;
+            $new_image = time().rand(1000,9999).'.'.$fields['image']->extension();
+            // update the user information
+            $user = User::where('id',$fields['id'])->update([
+                'first_name' => $fields['first_name'],
+                'last_name' => $fields['last_name'],
+                'phone_number' => $fields['phone_number'],
+                'address' => $fields['address'],
+                'image' => $new_image
+            ]);
+            // add the new image
+            $request->image->move(public_path('images/users'),$new_image);
+            // get the path of the old image
+            $image_path = public_path('images/users/'.$last_image);
+            // delete the old image
+            if(file_exists($image_path)){
+                unlink($image_path);
+            }
+        }
+        $response = [
+            'message' => "profile updated successfully",
+        ];
+        return response($response,201);
+    }
+
+    public function changePassword(Request $request)
+    {
+        $fields = $request->validate([
+            'user' => 'required|integer',
+            'old_password' => 'required|string',
+            'new_password' => 'required|string',
+        ]);
+
+        // check email
+        $user = User::where('id',$fields['user'])->first();
+
+        if(!Hash::check($fields['old_password'],$user->password))
+        {
+            return response([
+                'message' => 'the old password is uncorrect'
+            ],422);
+        }
+
+        $user = User::where('id',$fields['user'])->update([
+            'password' => bcrypt($fields['new_password']),
+        ]);
+
+        return response([
+            'message' => 'password changed successfully'
+        ]);
+
+    }
 }
