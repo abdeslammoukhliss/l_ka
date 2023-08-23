@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('day');
             $table->unsignedBigInteger('shift');
 
-            $table->foreign('student')->references('id')->on('users');
-            $table->foreign('group_project')->references('id')->on('groups_projects');
+            $table->foreign('shift')->references('id')->on('shifts');
+            // $table->foreign('group_project')->references('id')->on('groups_projects');
             $table->timestamps();
         });
     }

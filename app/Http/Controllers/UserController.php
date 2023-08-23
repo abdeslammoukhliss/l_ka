@@ -33,7 +33,8 @@ class UserController extends Controller
     {
         $fields = $request->validate([
             'student' => 'required|integer|exists:users,id',
-            'group' => 'required|integer|exists:groups,id'
+            'group' => 'required|integer|exists:groups,id',
+            'course' => 'required|integer|exists:courses,id'
         ]);
 
         $user = User::where('id',$fields['student'])->first();
@@ -41,26 +42,27 @@ class UserController extends Controller
         {
             return response(['message'=>'this user is not a student']);
         }
-        $old_student_group = StudentGroup::where('student',$fields['student'])->first();
+
+        // verify if the student really study in that course
+        $old_student_group = DB::select('select sg.id, sg.group from `groups` g join students_groups sg on g.id = sg.group where g.course = ? and sg.student = ?',[$fields['course'], $fields['student']]);
+        
+        if(count($old_student_group)==0)
+        {
+            return response(['message'=>'this student don\'t study in this course'],422);
+        }
 
         // chech if the old group and the new one belongs to the same course
-        $old_group = Group::where('id',$old_student_group->group)->first();
+        $old_group = Group::where('id',$old_student_group[0]->group)->first();
         $new_group = Group::where('id',$fields['group'])->first();
         if($old_group->course != $new_group->course)
         {
-            return response(['message'=>'the change from a course to another is not possible']);
+            return response(['message'=>'the change from a course to another can\'t be done'],422);
         }
 
-        $old_student_group->group = $fields['group'];
-        $old_student_group->save();
-
-        // $student_group = new StudentGroup();
-        // $student_group->student = $user->id;
-        // $student_group->group = $fields['group'];
-        // $student_group->registration_date = $old_student_group->registration_date;
-        // $student_group->save();
-
-        // StudentGroup::where('id',$old_student_group->id)->delete();
+        // change the group in student group
+        $new_student_group = StudentGroup::where([['student','=',$fields['student']],['group','=',$old_group->id]])->first();
+        $new_student_group->group = $fields['group'];
+        $new_student_group->save();
 
         return response(['message'=>'student group have changed successfully']);
     }

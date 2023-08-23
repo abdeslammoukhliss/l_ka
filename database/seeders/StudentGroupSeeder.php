@@ -17,23 +17,27 @@ class StudentGroupSeeder extends Seeder
         DB::table('students_groups')->insert([
             'student' => 4,
             'group' => 2,
-            'registration_date' => now()
+            'registration_date' => now(),
+            'study_method' => 3
         ]);
         DB::table('students_groups')->insert([
             'student' => 5,
             'group' => 2,
-            'registration_date' => now()
+            'registration_date' => now(),
+            'study_method' => 3
         ]);
 
         DB::table('students_groups')->insert([
             'student' => 4,
             'group' => 6,
-            'registration_date' => now()
+            'registration_date' => now(),
+            'study_method' => 3
         ]);
         DB::table('students_groups')->insert([
             'student' => 5,
             'group' => 6,
-            'registration_date' => now()
+            'registration_date' => now(),
+            'study_method' => 3
         ]);
     }
 }

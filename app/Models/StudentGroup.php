@@ -14,6 +14,7 @@ class StudentGroup extends Model
     protected $fillable = [
         'student',
         'group',
-        'registration_date'
+        'registration_date',
+        'study_method'
     ];
 }
