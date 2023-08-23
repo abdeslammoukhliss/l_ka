@@ -64,11 +64,26 @@ class ProjectController extends Controller
 
     public function getAllProjects()
     {
-        $projects = Project::get(['id','name','description']);
-        foreach($projects as $project)
+        $result = [];
+        $groups = DB::select('select g.id from students_groups sg join `groups` g on sg.group = g.id ');
+        foreach($groups as $group)
         {
-            $detail_project = DB::select('select affected_date,deadline from groups_projects where project = ?',[$project->id])[0];
-            // $project-> 
+            $projects = DB::select('select p.id, p.name,p.module, p.description,gp.deadline, gp.affected_date from projects p join groups_projects gp on p.id = gp.project ');
+            foreach($projects as $project)
+            {
+                // $module = DB::select('select name from modules where id = ?;',[$project->module])[0]->name;
+                $course = DB::select('select c.id from courses c join modules m on c.id = m.course where m.id = ?;',[$project->module])[0]->id;
+                array_push($result,[
+                    'id' => $project->id,
+                    'name' => $project->name,
+                    'deadline' => $project->deadline,
+                    'affected_date' => $project->affected_date,
+                    'description' => $project->description,
+                    'course' => $course,
+                    'moduleId' => $project->module
+                ]);
+            }
         }
+        return response($result);
     }
 }

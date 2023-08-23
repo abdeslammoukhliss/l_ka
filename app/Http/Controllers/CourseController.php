@@ -133,23 +133,29 @@ class CourseController extends Controller
             }
             
             $course["duration"]=$duration;
-            $course->modules = $ms->map(function ($module) {
-                return ['id' => $module->id];
-            });
-            
+            $course->modules = $modules;
             $gs = Group::where('course',$course->id)->get('id');
-            // $groups = [];
-          
-            $course->groups = $gs;
-    
+            $groups = [];
+            foreach($gs as $g)
+            {
+                array_push($groups,$g->id);
+            }
+            $course->groups=$groups;
             $ts = DB::select('select distinct tm.teacher as id from teachers_modules tm join modules m on tm.module = m.id where m.course = ?',[$course->id]);
-            // $teachers = [];
-            // foreach($ts as $t)
-            // {
-            //     array_push($teachers,$t->id);
-            // }
-             $course->teachers = $ts;
-
+            $teachers = [];
+            foreach($ts as $t)
+            {
+                array_push($teachers,$t->id);
+            }
+             $course->teachers = $teachers;
+             $pr = Project::whereIn('module',$modules)->get('id'); // select('select distinct pr.id as id from projects pr where pr.module in ?',[$modules]);//
+             $projects = [];
+             foreach($pr as $p)
+             {
+                 array_push($projects,$p->id);
+             }
+              $course->projects = $projects;
+ 
              
         }
         return response($courses);
