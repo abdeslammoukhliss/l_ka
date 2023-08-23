@@ -6,6 +6,7 @@ use App\Http\Requests\AddCourseRequest;
 use App\Http\Requests\EnrollRequest;
 use App\Models\Chapter;
 use App\Models\Course;
+use App\Models\Disponibility;
 use App\Models\Group;
 use App\Models\Module;
 use App\Models\Payment;
@@ -363,16 +364,34 @@ class CourseController extends Controller
         {
             return response(['message'=> 'only the students are allowed to enroll the courses'],422);
         }
+
+        $old_student_group = DB::select('select sg.id, sg.group from `groups` g join students_groups sg on g.id = sg.group where g.course = ? and sg.student = ?',[$fields['course_id'], $fields['student_id']]);
+        
+        if(count($old_student_group)>0)
+        {
+            return response(['message'=>'you are already enrolled in this course'],422);
+        }
+
         $group = Group::where('course',$fields['course_id'])->where('name','default')->first();
 
         $student_group = new StudentGroup();
         $student_group->student = $fields['student_id'];
+        $student_group->study_method = $fields['study_method'];
         $student_group->group = $group->id;
         $student_group->registration_date = now();
         $student_group->save();
 
-        $course = Course::where('id',$fields['course_id'])->first();
+        $disponibilities = $fields['disponibilities'];
+        foreach($disponibilities as $d)
+        {
+            $disponibility = new Disponibility();
+            $disponibility->student_group = $student_group->id;
+            $disponibility->shift = $d['shift'];
+            $disponibility->day = $d['day'];
+            $disponibility->save();
+        }
 
+        $course = Course::where('id',$fields['course_id'])->first();
         $payment = new Payment();
         $payment->total = 0;
         $payment->rest = $course->price;

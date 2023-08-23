@@ -17,9 +17,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('day');
             $table->unsignedBigInteger('shift');
+            $table->unsignedBigInteger('student_group');
 
             $table->foreign('shift')->references('id')->on('shifts');
-            // $table->foreign('group_project')->references('id')->on('groups_projects');
+            $table->foreign('student_group')->references('id')->on('students_groups');
             $table->timestamps();
         });
     }

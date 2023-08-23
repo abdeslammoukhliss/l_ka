@@ -27,6 +27,10 @@ class EnrollRequest extends FormRequest
         return [
             'course_id' => 'required|integer|exists:courses,id',
             'student_id' => 'required|integer|exists:users,id',
+            'study_method' => 'required|integer|exists:study_methods,id',
+            'disponibilities' => 'required|present',
+                'disponibilities.*.day' => 'required|integer',
+                'disponibilities.*.shift' => 'required|integer|exists:shifts,id',
         ];
     }
 }
