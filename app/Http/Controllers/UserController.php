@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Consultation;
 use App\Models\Group;
+use App\Models\Payment;
 use App\Models\StudentGroup;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -78,14 +79,21 @@ class UserController extends Controller
             {
                 $sessions = DB::select('select s.id , s.date, s.time from sessions s join presences p on s.id = p.`session` where p.student = ? and s.`group` = ?;',[$student->id,$item->group_id]);
                 $pre_score = DB::select('select score from groups_projects gp join students_progresses sp on gp.id = sp.group_project where gp.`group` = ? and sp.student = ?;',[$item->group_id,$student->id]);
+                $payment = Payment::where([['student','=',$student->id],['course','=',$item->course_id]])->first();
                 $score = 0;
+                $rest = null;
                 if($pre_score!=null)
                 {
                     $score = $pre_score[0]->score;
                 }
+                if(!is_null($payment))
+                {
+                    $rest = $payment->rest;
+                }
                 array_push($courses,[
                     'id'=>$item->course_id,
                     'name'=>$item->course_name,
+                    'rest' => $rest,
                     'presence'=> $sessions,
                     'score'=> $score
                 ]);                
