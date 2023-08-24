@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\GroupProject;
+use App\Models\Module;
 use App\Models\Project;
 use App\Models\StudentGroup;
 use App\Models\StudentProgress;
@@ -85,5 +86,17 @@ class ProjectController extends Controller
             }
         }
         return response($result);
+    }
+
+    public function getCourseProjects($course)
+    {
+        $result = [];
+        $modules = Module::where('course',$course)->get('id');
+        foreach($modules as $module)
+        {
+            $projects = Project::where('module',$module->id)->get(['id','name','description','module']);
+            array_push($result,...$projects);
+        }
+        return $result;
     }
 }

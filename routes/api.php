@@ -81,7 +81,8 @@ Route::get('/get_all_chapters',[ChapterController::class,'getAllChapters']);
 Route::post('/assign_project', [ProjectController::class,'assignProject']);
 // get the projects of a student
 Route::get('/get_student_projects/{student}', [ProjectController::class,'getStudentProjects']);
-
+// get the projects of a course
+Route::get('/get_course_projects/{course}', [ProjectController::class,'getCourseProjects']);
 Route::get('/get_all_projects', [ProjectController::class,'getAllProjects']);
 
 
