@@ -30,8 +30,12 @@ class PaymentController extends Controller
             return response(['message' => 'this user is not enrolled in that course'],422);
         }
 
-        $payment = Payment::where('course',$fields['course'])->first();
+        $payment = Payment::where([['course', '=',$fields['course']],['student',$fields['student']]])->first();
 
+        if(is_null($payment))
+        {
+            return response(['message'=>'this student hasn\'t enrolled to this course'],422);
+        }
         $payment_detail = new PaymentDetail();
         $payment_detail->amount = $fields['amount'];
         $payment_detail->payment = $payment->id;
