@@ -156,8 +156,13 @@ class CourseController extends Controller
                  array_push($projects,$p->id);
              }
               $course->projects = $projects;
- 
-             
+            
+            $chapters = [];
+            $ch = Chapter::whereIn('module',$modules)->get('id');
+            foreach($ch as $c){
+                array_push($chapters, $c->id);
+            }
+            $course->chapters = $chapters;
         }
         return response($courses);
     }
