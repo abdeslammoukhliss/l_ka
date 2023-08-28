@@ -23,8 +23,8 @@ class ModuleController extends Controller
             $chapters = Chapter::where('module',$m->id)->get('id');
             $m->chapters = $chapters;
 
-            $teacher = DB::select('select u.id,u.full_name from users u join teachers_modules tm on u.id = tm.teacher where tm.module = ?;',[$m->id]);
-            $m->teacher = $teacher;
+            $teacher = DB::select('select u.full_name from users u join teachers_modules tm on u.id = tm.teacher where tm.module = ?;',[$m->id])[0];
+            $m->teacher = $teacher->full_name;
 
             array_push($ms,$m);
         }
