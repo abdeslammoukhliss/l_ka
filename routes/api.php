@@ -45,6 +45,11 @@ Route::get('/get_teachers',[UserController::class,'getTeachers']);
 
 Route::get('/get_students',[UserController::class,'getStudents']);
 
+Route::put('/edit_profile', [UserController::class,'editProfile']);
+
+Route::put('/change_password', [UserController::class,'changePassword']);
+
+
 // course APIs //////////////////////////////////////////////////////
 
 Route::post('/add_course',[CourseController::class,'addCourse']);
