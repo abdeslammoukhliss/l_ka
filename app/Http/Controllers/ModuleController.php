@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\Module;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ModuleController extends Controller
 {
@@ -20,9 +22,12 @@ class ModuleController extends Controller
 
             $chapters = Chapter::where('module',$m->id)->get('id');
             $m->chapters = $chapters;
+
+            $teacher = DB::select('select u.id,u.full_name from users u join teachers_modules tm on u.id = tm.teacher where tm.module = ?;',[$m->id]);
+            $m->teacher = $teacher;
+
             array_push($ms,$m);
         }
         return response($modules);
-    
     }
 }
