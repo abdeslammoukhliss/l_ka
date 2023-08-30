@@ -71,6 +71,8 @@ Route::post('/assign_project', [ProjectController::class,'assignProject']);
 Route::get('/get_student_projects/{student}', [ProjectController::class,'getStudentProjects']);
 Route::get('/get_course_projects/{course}', [ProjectController::class,'getCourseProjects']);
 Route::get('/get_all_projects', [ProjectController::class,'getAllProjects']);
+Route::post('/add_project',[ProjectController::class,'addProject']);
+Route::put('/edit_project',[ProjectController::class,'editProject']);
 
 // group APIs ////////////////////////////////////////////////////////
 Route::get('/get_course_groups/{course}',[GroupController::class,'getCourseGroups']);
