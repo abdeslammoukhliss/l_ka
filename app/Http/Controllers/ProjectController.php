@@ -90,4 +90,39 @@ class ProjectController extends Controller
         }
         return $result;
     }
+
+    public function addProject(Request $request)
+    {
+        $fields = $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'module' => 'required|integer|exists:modules,id',
+        ]);
+
+        Project::create([
+            'name' => $fields['name'],
+            'description' => $fields['description'],
+            'module' => $fields['module']
+        ]);
+
+        return response(['message'=>'you have created a new project successfully']);
+    }
+
+    public function editProject(Request $request)
+    {
+        $fields = $request->validate([
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'module' => 'required|integer|exists:modules,id',
+        ]);
+
+        $project = Project::where('id',$fields['project_id'])->first();
+        $project->update([
+            'name' => $fields['name'],
+            'description' => $fields['description'],
+            'module' => $fields['module']
+        ]);
+
+        return response(['message'=>'you have updated the project successfully']);
+    }
 }

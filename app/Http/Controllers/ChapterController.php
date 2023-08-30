@@ -11,4 +11,38 @@ class ChapterController extends Controller
     {
         return Chapter::get(['id','name','module']);
     }
+
+    public function addChapter(Request $request)
+    {
+        $fields = $request->validate([
+            'name' => 'required|string',
+            'module' => 'required|integer|exists:modules,id',
+        ]);
+
+        Chapter::create([
+            'name' => $fields['name'],
+            'module' => $fields['module'],
+            'status' => 0
+        ]);
+
+        return response(['message'=>'you have created a new chapter successfully']);
+    }
+
+    public function editChapter(Request $request)
+    {
+        $fields = $request->validate([
+            'chapter_id' => 'required|integer|exists:chapters,id',
+            'name' => 'required|string',
+            'status' => 'required|integer|min:0|max:1',
+            'module' => 'required|integer|exists:modules,id',
+        ]);
+
+        Chapter::where('id',$fields['chapter_id'])->update([
+            'name' => $fields['name'],
+            'description' => $fields['description'],
+            'module' => $fields['module']
+        ]);
+
+        return response(['message'=>'you have updated the chapter successfully']);
+    }
 }

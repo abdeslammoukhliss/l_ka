@@ -37,4 +37,33 @@ class GroupController extends Controller
         }
         return $groups;
     }
+
+    public function addGroup(Request $request)
+    {
+        $fields = $request->validate([
+            'course_id' => 'required|integer|exists:courses,id',
+            'name' => 'required|string',
+        ]);
+
+        Group::create([
+            'course' => $fields['course'],
+            'name' => $fields['name'],
+        ]);
+
+        return response(['message'=>'you have created a new group successfully']);
+    }
+
+    public function editGroup(Request $request)
+    {
+        $fields = $request->validate([
+            'group_id' => 'required|integer|exists:groups,id',
+            'name' => 'required|string',
+        ]);
+
+        Group::where('id',$fields['group_id'])->update([
+            'name' => $fields['name'],
+        ]);
+
+        return response(['message'=>'you have updated the group successfully']);
+    }
 }
