@@ -15,6 +15,7 @@ use App\Models\StudentGroup;
 use App\Models\TeacherModule;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
@@ -89,6 +90,27 @@ class CourseController extends Controller
         }
         
         return response(["message"=>"course inserte succefully"],201);
+    }
+
+    public function editCourse(Request $request)
+    {
+        $fields = $request->validate([
+            'course_id'=>'required|integer|exists:courses,id',
+            'category'=>'required|integer|exists:categories,id',
+            'name'=>'required|string',
+            'description'=>'required|string',
+            'price'=>'required|numeric',
+        ]);
+
+        $course = Course::where('id',$fields['course_id'])->first();
+
+        $course->category = $fields['category'];
+        $course->name = $fields['name'];
+        $course->description = $fields['description'];
+        $course->price = $fields['price'];
+        $course->save();
+
+        return response(['message'=>'you have updated the course successfully']);
     }
 
     public function getCourses()
