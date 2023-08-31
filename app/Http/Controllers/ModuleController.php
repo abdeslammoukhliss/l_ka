@@ -38,7 +38,7 @@ class ModuleController extends Controller
             'name' => 'required|string',
             'description' => 'required|string',
             'duration' => 'required|integer',
-            'course' => 'required|integer|exists:courses,id',
+            'course_id' => 'required|integer|exists:courses,id',
             'teacher' => 'required|integer|exists:users,id'
         ]);
 
@@ -52,6 +52,7 @@ class ModuleController extends Controller
         $module->name = $fields['name'];
         $module->description = $fields['description'];
         $module->duration = $fields['duration'];
+        $module->course = $fields['course_id'];
         $module->save();
 
         $teacher_module = new TeacherModule();
