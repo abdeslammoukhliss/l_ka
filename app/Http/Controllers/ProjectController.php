@@ -111,16 +111,15 @@ class ProjectController extends Controller
     public function editProject(Request $request)
     {
         $fields = $request->validate([
+            'project_id' => 'required|integer|exists:projects,id',
             'name' => 'required|string',
-            'description' => 'required|string',
-            'module' => 'required|integer|exists:modules,id',
+            'description' => 'required|string'
         ]);
 
         $project = Project::where('id',$fields['project_id'])->first();
         $project->update([
             'name' => $fields['name'],
-            'description' => $fields['description'],
-            'module' => $fields['module']
+            'description' => $fields['description']
         ]);
 
         return response(['message'=>'you have updated the project successfully']);

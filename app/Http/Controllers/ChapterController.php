@@ -34,13 +34,11 @@ class ChapterController extends Controller
             'chapter_id' => 'required|integer|exists:chapters,id',
             'name' => 'required|string',
             'status' => 'required|integer|min:0|max:1',
-            'module' => 'required|integer|exists:modules,id',
         ]);
 
         Chapter::where('id',$fields['chapter_id'])->update([
             'name' => $fields['name'],
-            'description' => $fields['description'],
-            'module' => $fields['module']
+            'description' => $fields['description']
         ]);
 
         return response(['message'=>'you have updated the chapter successfully']);
