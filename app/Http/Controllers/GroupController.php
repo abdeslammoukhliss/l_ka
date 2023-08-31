@@ -46,7 +46,7 @@ class GroupController extends Controller
         ]);
 
         Group::create([
-            'course' => $fields['course'],
+            'course' => $fields['course_id'],
             'name' => $fields['name'],
         ]);
 
