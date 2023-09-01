@@ -12,6 +12,11 @@ class ChapterController extends Controller
         return Chapter::get(['id','name','module']);
     }
 
+    public function getModuleChapters($module)
+    {
+        return Chapter::where('module',$module)->get(['id','name','module']);
+    }
+
     public function addChapter(Request $request)
     {
         $fields = $request->validate([

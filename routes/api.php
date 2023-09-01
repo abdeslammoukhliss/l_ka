@@ -58,6 +58,7 @@ Route::get('/get_categories',[CategoryController::class,'getCategories']);
 
 // module APIs ///////////////////////////////////////////////////
 Route::get('/get_all_modules',[ModuleController::class,'getAllModules']);
+Route::get('/get_module_chapters/{course}',[ModuleController::class,'getModuleChapters']);
 Route::post('/add_module',[ModuleController::class,'addModule']);
 Route::put('/edit_module',[ModuleController::class,'editModule']);
 
