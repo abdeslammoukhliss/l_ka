@@ -91,4 +91,21 @@ class ModuleController extends Controller
         
         return response(['message'=>'module updated successfully']);
     }
+
+    public function deleteModule(Request $request)
+    {
+        $fields = $request->validate([
+            'module_id' => 'required|integer|exists:modules,id'
+        ]);
+        $chapters = Chapter::where('module',$fields['module_id'])->get();
+        $projects = Project::where('module',$fields['module_id'])->get();
+        if(sizeOf($chapters) == 0 && sizeOf($projects) == 0) 
+        {
+            TeacherModule::where('module',$fields['module_id'])->delete();
+
+            Module::where('id',$fields['module_id'])->delete();
+            return response(['message'=>'you have delete the module successfully']);
+        }
+        return response(['message'=>'you can\'t delete this module because other fields depend on it'],422);
+    }
 }

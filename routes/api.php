@@ -61,11 +61,13 @@ Route::get('/get_all_modules',[ModuleController::class,'getAllModules']);
 Route::get('/get_module_chapters/{course}',[ModuleController::class,'getModuleChapters']);
 Route::post('/add_module',[ModuleController::class,'addModule']);
 Route::put('/edit_module',[ModuleController::class,'editModule']);
+Route::delete('/delete_module',[ModuleController::class,'deleteModule']);
 
 // chapter APIs ///////////////////////////////////////////////////
 Route::get('/get_all_chapters',[ChapterController::class,'getAllChapters']);
 Route::post('/add_chapter',[ChapterController::class,'addChapter']);
 Route::put('/edit_chapter',[ChapterController::class,'editChapter']);
+Route::delete('/delete_chapter',[ChapterController::class,'deleteChapter']);
 
 // project APIs ////////////////////////////////////////////////////////
 Route::post('/assign_project', [ProjectController::class,'assignProject']);
@@ -74,12 +76,14 @@ Route::get('/get_course_projects/{course}', [ProjectController::class,'getCourse
 Route::get('/get_all_projects', [ProjectController::class,'getAllProjects']);
 Route::post('/add_project',[ProjectController::class,'addProject']);
 Route::put('/edit_project',[ProjectController::class,'editProject']);
+Route::delete('/delete_project',[ProjectController::class,'deleteProject']);
 
 // group APIs ////////////////////////////////////////////////////////
 Route::get('/get_course_groups/{course}',[GroupController::class,'getCourseGroups']);
 Route::get('/get_all_groups',[GroupController::class,'getAllGroups']);
 Route::post('/add_group',[GroupController::class,'addGroup']);
 Route::put('/edit_group',[GroupController::class,'editGroup']);
+Route::delete('/delete_group',[GroupController::class,'deleteGroup']);
 
 
 // session APIs ////////////////////////////////////////////////////////

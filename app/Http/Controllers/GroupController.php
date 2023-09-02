@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Group;
+use App\Models\GroupProject;
+use App\Models\Session;
+use App\Models\StudentGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -66,4 +69,21 @@ class GroupController extends Controller
 
         return response(['message'=>'you have updated the group successfully']);
     }
+
+    public function deleteGroup(Request $request)
+    {
+        $fields = $request->validate([
+            'group_id' => 'required|integer|exists:groups,id'
+        ]);
+        $sessions = Session::where('group',$fields['group_id'])->get();
+        $students_groups = StudentGroup::where('group',$fields['group_id'])->get();
+        $groups_projects = GroupProject::where('gorup',$fields['group_id'])->get();
+        if(sizeOf($sessions) == 0 && sizeOf($students_groups) == 0 && sizeOf($groups_projects) == 0) 
+        {
+            Group::where('id',$fields['group_id'])->delete();
+            return response(['message'=>'you have delete the group successfully']);
+        }
+        return response(['message'=>'you can\'t delete this group because other fields depend on it'],422);
+    }
+
 }

@@ -124,4 +124,21 @@ class ProjectController extends Controller
 
         return response(['message'=>'you have updated the project successfully']);
     }
+
+    public function deleteProject(Request $request) 
+    {
+        $fields = $request->validate([
+            'project_id' => 'required|integer|exists:projects,id'
+        ]);
+
+        $group_project = GroupProject::where('project',$fields['project_id'])->get();
+        if(sizeof($group_project) == 0)
+        {
+            Project::where('id',$fields['project_id'])->delete();
+
+            return response(['message'=>'you have delete this project successfully']);
+        }
+        return response(['message'=>'you can\'t delete this project, other fields depend on it'],422);
+
+    }
 }

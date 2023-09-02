@@ -48,4 +48,14 @@ class ChapterController extends Controller
 
         return response(['message'=>'you have updated the chapter successfully']);
     }
+
+    public function deleteChapter(Request $request) {
+        $fields = $request->validate([
+            'chapter_id' => 'integer|required|exists:chapters,id'
+        ]);
+
+        Chapter::where('id',$fields['chapter_id'])->delete();
+
+        return response(['message'=>'you have deleted this chapter successfully']);
+    }
 }
