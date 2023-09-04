@@ -70,6 +70,7 @@ class GroupController extends Controller
         return response(['message'=>'you have updated the group successfully']);
     }
 
+
     public function deleteGroup(Request $request)
     {
         $fields = $request->validate([
@@ -77,7 +78,7 @@ class GroupController extends Controller
         ]);
         $sessions = Session::where('group',$fields['group_id'])->get();
         $students_groups = StudentGroup::where('group',$fields['group_id'])->get();
-        $groups_projects = GroupProject::where('gorup',$fields['group_id'])->get();
+        $groups_projects = GroupProject::where('group',$fields['group_id'])->get();
         if(sizeOf($sessions) == 0 && sizeOf($students_groups) == 0 && sizeOf($groups_projects) == 0) 
         {
             Group::where('id',$fields['group_id'])->delete();
