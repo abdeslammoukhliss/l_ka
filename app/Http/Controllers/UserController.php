@@ -112,10 +112,20 @@ class UserController extends Controller
 
     public function getTeachers()
     {
-        $teachers = DB::select('select id,full_name from users where role = 2;');
+        $teachers = DB::select('select id,full_name,email,phone_number from users where role = 2;');
         foreach($teachers as $teacher)
         {
             $courses = DB::select('select distinct c.id, c.name from teachers_modules tm join modules m on tm.module = m.id join courses c on m.course = c.id where tm.teacher = ?;',[$teacher->id]);
+            foreach($courses as $course)
+            {
+                $modules = [];
+                $ms = DB::select('select m.id, m.name from modules m join teachers_modules tm on m.id = tm.module where teacher = ? and m.course = ?',[$teacher->id, $course->id]);
+                foreach($ms as $m)
+                {
+                    array_push($modules,$m);
+                }
+                $course->modules = $modules;
+            }
             $consultations = DB::select('select c.id, c.subject, c.description,c.date ,cs.name as status,co.name as course, u1.full_name as student, c.id from consultations c join users u1 on c.student = u1.id join courses co on c.course = co.id join consultations_statuses cs on c.status = cs.id where c.teacher = ?;',[$teacher->id]);
             $teacher->courses = $courses;
             $teacher->consultations = $consultations;
