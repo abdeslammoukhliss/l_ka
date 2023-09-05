@@ -26,7 +26,7 @@ class AddCourseRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'category' => 'required|integer',
+            'category' => 'required|integer|exists:categories,id',
             'description' => 'required|string',
             'price' => 'required|numeric',
             'image' => 'nullable|image',

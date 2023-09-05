@@ -92,6 +92,32 @@ class CourseController extends Controller
         return response(["message"=>"course inserte succefully"],201);
     }
 
+    public function addCourseOnly(Request $request)
+    {
+        $fields = $request->validate([
+            'name' => 'required|string',
+            'category' => 'required|integer|exists:categories,id',
+            'description' => 'required|string',
+            'price' => 'required|numeric',
+            'image' => 'nullable|image',
+        ]);
+
+        $course = new Course();
+        $course->name = $fields['name'];
+        $course->description = $fields['description'];
+        $course->category = $fields['category'];
+        $course->price = $fields['price'];
+        if(isset($fields['image']))
+        {
+            $image_name = time().rand(1000,9999).'.'.$fields['image']->extension();
+            $course->image = $image_name;
+            $request->image->move(public_path('images/courses'),$image_name);
+        }
+        $course->save();
+
+        return response(['message'=>'course had been added successfully']);
+    }
+
     public function editCourse(Request $request)
     {
         $fields = $request->validate([
