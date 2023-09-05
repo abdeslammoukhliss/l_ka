@@ -44,6 +44,7 @@ Route::put('/change_password', [UserController::class,'changePassword']);
 
 // course APIs //////////////////////////////////////////////////////
 Route::post('/add_course',[CourseController::class,'addCourse']);
+Route::post('/add_course_only',[CourseController::class,'addCourseOnly']);
 Route::get('/get_courses',[CourseController::class,'getCourses']);
 Route::get('/get_courses_with_details',[CourseController::class,'getCoursesWithDetails']);
 Route::get('/get_teacher_courses/{teacher}',[CourseController::class,'getTeacherCourses']);
