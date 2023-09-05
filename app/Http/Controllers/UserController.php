@@ -70,30 +70,33 @@ class UserController extends Controller
 
     public function getStudents()
     {
-        $students = User::where('role',3)->get(['id','full_name']);
+        $students = User::where('role',3)->get(['id','full_name','email','phone_number']);
         foreach($students as $student)
         {
-            $student_courses = DB::select('select  c.id as course_id, c.name as course_name, g.id as group_id from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on c.id = g.course where u.id = ?;',[$student->id]);
+            $student_courses = DB::select('select  c.id as course_id, c.name as course_name, g.id as group_id, g.name as group_name from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on c.id = g.course where u.id = ?;',[$student->id]);
             $courses = [];
+            $projects = [];
             foreach($student_courses as $item)
             {
                 $sessions = DB::select('select s.id , s.date, s.time from sessions s join presences p on s.id = p.`session` where p.student = ? and s.`group` = ?;',[$student->id,$item->group_id]);
                 $pre_score = DB::select('select score from groups_projects gp join students_progresses sp on gp.id = sp.group_project where gp.`group` = ? and sp.student = ?;',[$item->group_id,$student->id]);
-                $payment = Payment::where([['student','=',$student->id],['course','=',$item->course_id]])->first();
+                // $payment = Payment::where([['student','=',$student->id],['course','=',$item->course_id]])->first();
+                $projects = DB::select('select c.name, m.name, p.name, gp.deadline from courses c join modules m on c.id = m.course join projects p on p.module = m.id join groups_projects gp on p.id = gp.project where gp.group = ?',[$item->group_id]);
                 $score = 0;
-                $rest = null;
+                // $rest = null;
                 if($pre_score!=null)
                 {
                     $score = $pre_score[0]->score;
                 }
-                if(!is_null($payment))
-                {
-                    $rest = $payment->rest;
-                }
+                // if(!is_null($payment))
+                // {
+                //     $rest = $payment->rest;
+                // }
                 array_push($courses,[
                     'id'=>$item->course_id,
                     'name'=>$item->course_name,
-                    'rest' => $rest,
+                    'group'=>$item->group_name,
+                    // 'rest' => $rest,
                     'presence'=> $sessions,
                     'score'=> $score
                 ]);                
@@ -105,6 +108,7 @@ class UserController extends Controller
                 // ]);
             }
             $student->courses = $courses;
+            $student->projects = $projects;
         }
         
         return response($students);
