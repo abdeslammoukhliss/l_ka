@@ -50,7 +50,12 @@ class PaymentController extends Controller
 
     public function getPayments()
     {
-        $result = DB::select('select u.id, u.full_name, c.name as course, p.rest, c.price from users u join payments p on u.id = p.student join payments_details pd on p.id = pd.payment join courses c on p.course = c.id;');
+        $result = DB::select('select u.id, u.full_name, c.name as course, p.rest, c.price, p.id as payment_id from users u join payments p on u.id = p.student join courses c on p.course = c.id;');
+        foreach($result as $item)
+        {
+            $details = DB::select('select amount , date from payments_details where payment = ?',[$item->payment_id]);
+            $item->details = $details;
+        }
         return response($result);
     }
 
