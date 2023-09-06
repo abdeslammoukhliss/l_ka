@@ -90,4 +90,8 @@ class SessionController extends Controller
         $sessions = DB::select('select s.id, c.name as course, s.date, s.time, s.duration, g.name as `group` from sessions s join `groups` g on s.group = g.id join courses c on c.id = g.course join students_groups sg on g.id = sg.group where sg.student = 4;');
         return $sessions;
     }
+
+    public function getSessionsByDate(Request $request) {
+
+    }
 }
