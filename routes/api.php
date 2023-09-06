@@ -86,12 +86,12 @@ Route::post('/add_group',[GroupController::class,'addGroup']);
 Route::put('/edit_group',[GroupController::class,'editGroup']);
 Route::delete('/delete_group',[GroupController::class,'deleteGroup']);
 
-
 // session APIs ////////////////////////////////////////////////////////
 Route::post('/add_session',[SessionController::class,'addSession']);
 Route::post('/add_presence',[SessionController::class,'addPresence']);
 Route::get('/get_sessions',[SessionController::class,'getSessions']);
 Route::get('/get_student_sessions/{student_id}',[SessionController::class,'getStudentSessions']);
+Route::get('/get_sessions_by_date/{date}',[SessionController::class,'getSessionsByDate']);
 
 // consultation APIs /////////////////////////////////////////////////////
 Route::post('/add_consultation',[ConsultationController::class,'addConsultation']);

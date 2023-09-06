@@ -89,9 +89,22 @@ class SessionController extends Controller
         }
         $sessions = DB::select('select s.id, c.name as course, s.date, s.time, s.duration, g.name as `group` from sessions s join `groups` g on s.group = g.id join courses c on c.id = g.course join students_groups sg on g.id = sg.group where sg.student = 4;');
         return $sessions;
+    
     }
 
-    public function getSessionsByDate(Request $request) {
-
+    public function getSessionsByDate($date)
+    {
+        $sessions = [];
+        $users = [];
+        if (strtotime($date) === false) {
+            return response(['message' => 'you didn\'t insert a real date'],422);
+        }
+        $sessions = DB::select('select s.id, g.name as `group`, c.name as course from sessions s join `groups` g on s.group = g.id join courses c on g.course = c.id where s.date = ?',[$date]);
+        foreach($sessions as $session)
+        {
+            $users = DB::select('select u.id as user_id, u.full_name, p.time from users u join presences p on u.id = p.student where p.session = ?',[$session->id]);
+            $session->users = $users;
+        }
+        return $sessions;
     }
 }
