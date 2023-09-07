@@ -239,25 +239,22 @@ class CourseController extends Controller
         foreach($courses as $course)
         {
             $modules = Module::where('course',$course->id)->get();
-            $modules_count = 0;
-            $projects_counts = 0;
+            $modules_count = sizeOf($modules);
+            $projects_count = 0;
             foreach($modules as $module)
             {
-                $modules_count++;
                 $projects = Project::where('module',$module->id)->get();
-                foreach($projects as $project)
-                {
-                    $projects_counts++;
-                }
-
+                $projects_count = sizeOf($projects);
             }
+            $sessions_count = DB::select('select count(*) as c from sessions s join `groups` g on s.group = g.id where g.course = ?',[$course->id])[0]->c;
             array_push($result,[
                 'id' => $course->id,
                 'name' => $course->name,
                 'price' => $course->price,
                 'image' => $course->image,
                 'modules' => $modules_count,
-                'projects' => $projects_counts
+                'projects' => $projects_count,
+                'sessions' => $sessions_count
             ]);
         }
         // modules number
