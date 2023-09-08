@@ -91,6 +91,11 @@ class ProjectController extends Controller
         return $result;
     }
 
+    public function getTeacherProjects($teacher, $course)
+    {
+        return DB::select('select p.name as project, gp.group, gp.affected_date, gp.deadline from teachers_modules tm join modules m on tm.module = m.id join projects p on m.id = p.module join groups_projects gp on p.id = gp.project where tm.teacher = ? and m.course = ?;',[$teacher,$course]);
+    }
+
     public function addProject(Request $request)
     {
         $fields = $request->validate([
