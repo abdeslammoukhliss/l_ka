@@ -39,6 +39,7 @@ Route::get('/get_statistics',[UserController::class,'getStatistics']);
 Route::post('/change_group',[UserController::class,'changeGroup']);
 Route::get('/get_teachers',[UserController::class,'getTeachers']);
 Route::get('/get_students',[UserController::class,'getStudents']);
+Route::get('/get_new_students',[UserController::class,'getNewStudents']);
 Route::put('/edit_profile', [UserController::class,'editProfile']);
 Route::put('/change_password', [UserController::class,'changePassword']);
 
