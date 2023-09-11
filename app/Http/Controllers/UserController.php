@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Disponibility;
 use App\Models\Group;
 use App\Models\Payment;
+use App\Models\PaymentDetail;
 use App\Models\StudentGroup;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -216,7 +218,7 @@ class UserController extends Controller
 
     public function getNewStudents() 
     {
-        $students = DB::select('select u.id, u.full_name, u.phone_number, u.email, c.name as course, sg.registration_date from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on g.course = c.id where g.name = ?;',['default']);
+        $students = DB::select('select u.id as student_id, u.full_name, u.phone_number, u.email, c.id as course_id, c.name as course_name, sg.registration_date from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on g.course = c.id where g.name = ?;',['default']);
         return response($students);
     }
 
@@ -234,5 +236,30 @@ class UserController extends Controller
             }
         }
         return response($result);
+    }
+
+    public function rejectEnrollment(Request $request)
+    {
+        $fields = $request->validate([
+            'student' => 'required|integer|exists:users,id',
+            'course' => 'required|integer|exists:courses,id'
+        ]);
+
+        $student = User::where('id',$fields['student'])->first();
+        if($student->role != 3)
+        {
+            return response(['message'=>'user should be a student'],422);
+        }
+        $group = Group::where([['course','=',$fields['course']],['name','=','default']])->first();
+        $student_group = StudentGroup::where([['group','=',$group->id],['student','=',$student->id]])->first();
+        $payment = Payment::where([['course','=',$fields['course']],['student','=',$student->id]])->first();
+
+        PaymentDetail::where('payment',$payment->id)->delete();
+        $payment->delete();
+
+        Disponibility::where('student_group',$student_group->id)->delete();
+        $student_group->delete();
+
+        return response(['message'=>'user enrollement has been delete successfully']);
     }
 }
