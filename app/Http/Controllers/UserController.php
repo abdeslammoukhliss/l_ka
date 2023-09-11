@@ -146,7 +146,7 @@ class UserController extends Controller
             'full_name' => 'required|string|max:50',
             'phone_number' => 'required|string|unique:users,phone_number|max:20',
             'city' => 'required|string|max:20',
-            'gender' => 'required|string|min:0|max:1',
+            'gender' => 'required|integer|min:0|max:1',
             'image' => 'nullable|image'
         ]);
         $user = User::where('id',$fields['id'])->first();
@@ -156,10 +156,10 @@ class UserController extends Controller
         }
         if(!isset($fields['image'])){
             $user = User::where('id',$fields['id'])->update([
-                'first_name' => $fields['first_name'],
-                'last_name' => $fields['last_name'],
+                'full_name' => $fields['full_name'],
+                'gender' => $fields['gender'],
                 'phone_number' => $fields['phone_number'],
-                'address' => $fields['address']
+                'city' => $fields['city']
             ]);
         }else {
             // get the name of the old image
@@ -167,10 +167,10 @@ class UserController extends Controller
             $new_image = time().rand(1000,9999).'.'.$fields['image']->extension();
             // update the user information
             $user = User::where('id',$fields['id'])->update([
-                'first_name' => $fields['first_name'],
-                'last_name' => $fields['last_name'],
+                'full_name' => $fields['full_name'],
+                'gender' => $fields['gender'],
                 'phone_number' => $fields['phone_number'],
-                'address' => $fields['address'],
+                'city' => $fields['city'],
                 'image' => $new_image
             ]);
             // add the new image
