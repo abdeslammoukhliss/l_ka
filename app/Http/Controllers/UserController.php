@@ -218,8 +218,23 @@ class UserController extends Controller
 
     public function getNewStudents() 
     {
-        $students = DB::select('select u.id as student_id, u.full_name, u.phone_number, u.email, c.id as course_id, c.name as course_name, sg.registration_date from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on g.course = c.id where g.name = ?;',['default']);
-        return response($students);
+        $result = [];
+        $students = DB::select('select sg.id as student_group ,u.id as student_id, u.full_name, u.phone_number, u.email, c.id as course_id, c.name as course_name, sg.registration_date from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on g.course = c.id where g.name = ?;',['default']);
+        foreach($students as $student)
+        {
+            $disponibilities = DB::select('select d.day, s.name from disponibilities d join shifts s on d.shift = s.id where d.student_group = ?',[$student->student_group]);
+            array_push($result,[
+                "student_id"=> $student->student_id,
+                "full_name"=> $student->full_name,
+                "phone_number"=> $student->phone_number,
+                "email"=> $student->email,
+                "course_id"=> $student->course_id,
+                "course_name"=> $student->course_name,
+                "registration_date"=> $student->registration_date,
+                "disponibilities"=> $disponibilities
+            ]);
+        }
+        return response($result);
     }
 
     public function getTeacherStudents($course)
