@@ -56,6 +56,7 @@ Route::get('/get_course_details/{id}',[CourseController::class,'getCourseDetails
 Route::get('/get_course_details_for_student/{id}/{student}',[CourseController::class,'getCourseDetailsForStudent']);
 Route::post('/enroll',[CourseController::class,'enroll']);
 Route::put('/edit_course',[CourseController::class,'editCourse']);
+Route::delete('/delete_course',[CourseController::class,'deleteCourse']);
 
 // category APIs ///////////////////////////////////////////////////
 Route::get('/get_categories',[CategoryController::class,'getCategories']);

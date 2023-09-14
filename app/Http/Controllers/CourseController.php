@@ -451,4 +451,22 @@ class CourseController extends Controller
 
         return response(['message'=>'you have enrolled successfully']);
     }
+
+    public function deleteCourse(Request $request)
+    {
+        $fields = $request->validate([
+            'course_id' => 'required|integer|exists:courses,id'
+        ]);
+
+        $modules = Module::where('course',$fields['course_id'])->get();
+        $groups = Group::where('course',$fields['course_id'])->get();
+
+        if(sizeof($modules) == 0 || sizeof($groups) == 0)
+        {
+            return response(['message' => 'this course can\'t be deleted'],422);
+        }
+
+        Course::where('id',$fields['course_id'])->delete();
+        return response(['message'=>'course has been deleted successfully']);
+    }
 }
