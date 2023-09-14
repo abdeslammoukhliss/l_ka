@@ -96,6 +96,7 @@ Route::post('/add_presence',[SessionController::class,'addPresence']);
 Route::get('/get_sessions',[SessionController::class,'getSessions']);
 Route::get('/get_student_sessions/{student_id}',[SessionController::class,'getStudentSessions']);
 Route::get('/get_sessions_by_date/{date}',[SessionController::class,'getSessionsByDate']);
+Route::delete('/delete_session',[SessionController::class,'deleteSession']);
 
 // consultation APIs /////////////////////////////////////////////////////
 Route::post('/add_consultation',[ConsultationController::class,'addConsultation']);
