@@ -107,4 +107,20 @@ class SessionController extends Controller
         }
         return $sessions;
     }
+
+    public function deleteSession($session_id)
+    {
+        $session = Session::where('id',$session_id)->first();
+        if(is_null($session))
+        {
+            return response(['message'=>'this session does not exists'],422);
+        }
+        $presences = Presence::where('session',$session->id)->get();
+        if(sizeof($presences)>0)
+        {
+            return response(['message'=>'this session can\'t be deleted'],422);
+        }
+        $session->delete();
+        return response(['message'=>'you have deleted this session successfully']);
+    }
 }
