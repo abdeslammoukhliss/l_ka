@@ -44,6 +44,7 @@ Route::put('/edit_profile', [UserController::class,'editProfile']);
 Route::put('/change_password', [UserController::class,'changePassword']);
 Route::post('/change_group',[UserController::class,'changeGroup']);
 Route::post('/reject_enrollement',[UserController::class,'rejectEnrollment']);
+Route::get('/get_student_score/{student_id}/{group_project_id}',[UserController::class,'getStudentScore']);
 
 // course APIs //////////////////////////////////////////////////////
 Route::post('/add_course',[CourseController::class,'addCourse']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Disponibility;
 use App\Models\Group;
+use App\Models\GroupProject;
 use App\Models\Payment;
 use App\Models\PaymentDetail;
 use App\Models\StudentGroup;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+
+use function PHPUnit\Framework\isNull;
 
 class UserController extends Controller
 {
@@ -276,5 +279,20 @@ class UserController extends Controller
         $student_group->delete();
 
         return response(['message'=>'user enrollement has been delete successfully']);
+    }
+
+    public function getStudentScore($student_id,$group_project_id)
+    {
+        $student = User::where('id',$student_id)->first();
+        $group_project = GroupProject::where('id',$group_project_id)->first();
+        if(is_null($student))
+        {
+            return response(['message' => 'this student does not exist'],422);
+        }
+        if(is_null($group_project))
+        {
+            return response(['message' => 'this group project is not exist'],422);
+        }
+        
     }
 }

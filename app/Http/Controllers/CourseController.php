@@ -461,7 +461,7 @@ class CourseController extends Controller
         $modules = Module::where('course',$fields['course_id'])->get();
         $groups = Group::where('course',$fields['course_id'])->get();
 
-        if(sizeof($modules) == 0 || sizeof($groups) == 0)
+        if(sizeof($modules) > 0 || sizeof($groups) > 0)
         {
             return response(['message' => 'this course can\'t be deleted'],422);
         }
