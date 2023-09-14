@@ -121,4 +121,15 @@ class SessionController extends Controller
         Session::where('id',$fields['session_id'])->delete();
         return response(['message'=>'you have deleted this session successfully']);
     }
+
+    public function getSessionStudent($session_id)
+    {
+        $session = Session::where('id',$session_id)->first();
+        if(is_null($session))
+        {
+            return response(['message'=>'this session does not exist'],422);
+        }
+        $students = DB::select('select u.id,u.full_name from users u join students_groups sg on u.id = sg.student where sg.group = ?',[$session_id]);
+        return response($students);
+    }
 }
