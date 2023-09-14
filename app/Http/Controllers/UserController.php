@@ -8,6 +8,7 @@ use App\Models\GroupProject;
 use App\Models\Payment;
 use App\Models\PaymentDetail;
 use App\Models\StudentGroup;
+use App\Models\StudentProgress;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -293,6 +294,6 @@ class UserController extends Controller
         {
             return response(['message' => 'this group project is not exist'],422);
         }
-        
+        return response(StudentProgress::where([['student','=',$student->id],['group_project','=',$group_project->id]])->first());
     }
 }
