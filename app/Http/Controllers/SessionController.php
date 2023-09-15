@@ -129,7 +129,7 @@ class SessionController extends Controller
         {
             return response(['message'=>'this session does not exist'],422);
         }
-        $students = DB::select('select u.id,u.full_name from users u join students_groups sg on u.id = sg.student where sg.group = ?',[$session_id]);
+        $students = DB::select('select u.id,u.full_name from users u join students_groups sg on u.id = sg.student where sg.group = ?',[$session->group]);
         return response($students);
     }
 }
