@@ -85,7 +85,7 @@ class UserController extends Controller
 
     public function getStudents()
     {
-        $students = User::where('role',3)->get(['id','full_name','email','phone_number']);
+        $students = User::where('role',3)->get(['id','full_name','email','phone_number','image']);
         foreach($students as $student)
         {
             $student_courses = DB::select('select c.id as course_id, c.name as course_name, g.id as group_id, g.name as group_name from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on c.id = g.course where u.id = ?;',[$student->id]);
@@ -132,7 +132,7 @@ class UserController extends Controller
 
     public function getTeachers()
     {
-        $teachers = DB::select('select id,full_name,email,phone_number from users where role = 2;');
+        $teachers = DB::select('select id,full_name,email,phone_number, image from users where role = 2;');
         foreach($teachers as $teacher)
         {
             $courses = DB::select('select distinct c.id, c.name from teachers_modules tm join modules m on tm.module = m.id join courses c on m.course = c.id where tm.teacher = ?;',[$teacher->id]);
