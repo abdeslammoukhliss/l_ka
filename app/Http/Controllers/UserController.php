@@ -20,6 +20,16 @@ use function PHPUnit\Framework\isNull;
 
 class UserController extends Controller
 {
+    public function getUserData($id)
+    {
+        $user = User::where('id',$id)->first();
+        if(is_null($user))
+        {
+            return response(['message'=>'this user does not exists'],422);
+        }
+        return response($user);
+    }
+
     public function getStatistics()
     {
         $teachers_count = DB::select('select count(*) as count from users where role = 2')[0]->count;
