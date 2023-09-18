@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             ModuleSeeder::class,
             ProjectSeeder::class,
             ChapterSeeder::class,
-            StudentGroupSeeder::class,
+            // StudentGroupSeeder::class,
             TeacherModuleSeeder::class
         ]);
     }

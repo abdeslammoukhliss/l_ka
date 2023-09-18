@@ -115,6 +115,12 @@ class CourseController extends Controller
         }
         $course->save();
 
+        // default group
+        $group = new Group();
+        $group->name = 'default';
+        $group->course = $course->id;
+        $group->save();
+
         return response(['message'=>'course had been added successfully']);
     }
 
