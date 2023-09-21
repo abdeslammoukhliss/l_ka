@@ -41,7 +41,7 @@ Route::group(['middleware'=>['auth:sanctum']], function() {
     // user APIs //////////////////////////////////////////////////////
     Route::get('/get_statistics',[UserController::class,'getStatistics']);
     Route::get('/get_user_data/{id}',[UserController::class,'getUserData']);
-    Route::get('/get_teachers',[UserController::class,'getTeac  hers']);
+    Route::get('/get_teachers',[UserController::class,'getTeachers']);
     Route::get('/get_students',[UserController::class,'getStudents']);
     Route::get('/get_new_students',[UserController::class,'getNewStudents']);
     Route::get('/get_teacher_students/{course}',[UserController::class,'getTeacherStudents']);
