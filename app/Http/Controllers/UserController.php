@@ -233,18 +233,21 @@ class UserController extends Controller
     public function getNewStudents() 
     {
         $result = [];
-        $students = DB::select('select sg.id as student_group ,u.id as student_id, u.full_name, u.phone_number, u.email, c.id as course_id, c.name as course_name, sg.registration_date from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on g.course = c.id where g.name = ?;',['default']);
+        $students = DB::select('select sg.id as student_group ,u.id as student_id, u.full_name, u.image, u.phone_number, u.email, c.id as course_id, c.name as course_name, sg.registration_date from users u join students_groups sg on u.id = sg.student join `groups` g on sg.group = g.id join courses c on g.course = c.id where g.name = ?;',['default']);
         foreach($students as $student)
         {
             $disponibilities = DB::select('select d.day, s.name from disponibilities d join shifts s on d.shift = s.id where d.student_group = ? order by d.day',[$student->student_group]);
+            $study_method = DB::select('select sm.name from study_methods sm join students_groups sg on sm.id = sg.study_method where sg.id = ?',[$student->student_group])[0];
             array_push($result,[
                 "student_id"=> $student->student_id,
                 "full_name"=> $student->full_name,
+                "image"=> $student->image,
                 "phone_number"=> $student->phone_number,
                 "email"=> $student->email,
                 "course_id"=> $student->course_id,
                 "course_name"=> $student->course_name,
                 "registration_date"=> $student->registration_date,
+                "study_method" => $study_method->name,
                 "disponibilities"=> $disponibilities
             ]);
         }

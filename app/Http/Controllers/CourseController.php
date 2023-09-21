@@ -189,13 +189,16 @@ class CourseController extends Controller
             
             $course["duration"]=$duration;
             $course->modules = $modules;
-            $gs = Group::where('course',$course->id)->get('id');
+            $gs = Group::where('course',$course->id)->get();
             $groups = [];
             foreach($gs as $g)
             {
+                if($g->name == 'default'){
+                    continue;
+                }
                 array_push($groups,$g->id);
             }
-            $course->groups=$groups;
+            $course->groups=$groups; 
             $ts = DB::select('select distinct tm.teacher as id from teachers_modules tm join modules m on tm.module = m.id where m.course = ?',[$course->id]);
             $teachers = [];
             foreach($ts as $t)
@@ -302,7 +305,11 @@ class CourseController extends Controller
             }
             $group = DB::select('select g.id from students_groups sg join `groups` g on sg.group = g.id where sg.student = ? and g.course = ?;',[$student,$course->id])[0];
             $presence = DB::select('select count(*) as count from sessions s join presences p on s.id = p.`session` where p.student = ? and s.`group` = ?;',[$student,$group->id])[0]->count;
-            $score = DB::select('select score from groups_projects gp join students_progresses sp on gp.id = sp.group_project where gp.`group` = ? and sp.student = ?;',[$group->id,$student])[0]->score;
+            $s = DB::select('select score from groups_projects gp join students_progresses sp on gp.id = sp.group_project where gp.`group` = ? and sp.student = ?;',[$group->id,$student]);
+            $score=0;
+            if(sizeOf($s)>0){
+                $score = $s[0]->score;
+            }
             array_push($result,[
                 'id' => $course->id,
                 'name' => $course->name,
